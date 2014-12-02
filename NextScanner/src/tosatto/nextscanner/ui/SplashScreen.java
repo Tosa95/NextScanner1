@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
-public class SplashScreen extends JFrame {
+public class SplashScreen extends JFrame implements IInitListener{
 
 	private JLabel log;
 	private JProgressBar prog;
@@ -18,6 +18,12 @@ public class SplashScreen extends JFrame {
 		this.setUndecorated(true);
 		
 		
+		
+	}
+
+	@Override
+	public void initValuesChanged() {
+		// TODO Auto-generated method stub
 		
 	}
 }

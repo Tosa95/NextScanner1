@@ -1,8 +1,13 @@
 package tosatto.nextscanner.imaging;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 
 public class ImagingUtilities {
 	
@@ -22,6 +27,21 @@ public class ImagingUtilities {
 	    ris += (b) 			& 	0x000000ff;
 	
 		return ris;
+	}
+	
+	public static BufferedImage getImageFromResource (String name)
+	{
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+		InputStream input = classLoader.getResourceAsStream(name);
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(input);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return img;
 	}
 	
 	

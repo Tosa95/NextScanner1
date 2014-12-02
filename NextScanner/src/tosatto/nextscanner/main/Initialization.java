@@ -82,7 +82,7 @@ public class Initialization implements Runnable {
 		
 		setProgress (60);
 		
-		setTask("Creating main winsdow");
+		setTask("Creating main window");
 		new MainWindow();
 		
 		

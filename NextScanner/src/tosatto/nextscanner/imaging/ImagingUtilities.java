@@ -44,5 +44,32 @@ public class ImagingUtilities {
 		return img;
 	}
 	
+	public static BufferedImage setImageAlpha (BufferedImage img, int alpha)
+	{
+		BufferedImage ris;
+		
+		int width = img.getWidth();
+		
+		int[] imgData = new int[width];
+		
+		for (int y = 0; y < img.getHeight(); y++)
+		{
+			img.getRGB(0, y, width, 1, imgData, 0, 1);
+			
+			for (int x = 0; x < width; x++)
+			{
+				int color = imgData[x];
+				color &= 0x00FFFFFF;
+				color |= alpha<<24;
+				imgData[x] = color;
+			}
+			
+			img.setRGB(0, y, width, 1, imgData, 0, 1);
+		}
+		
+		
+		return img;
+	}
+	
 	
 }

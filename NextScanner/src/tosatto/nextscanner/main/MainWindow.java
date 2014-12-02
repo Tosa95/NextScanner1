@@ -7,6 +7,7 @@ import javax.swing.*;
 import tosatto.nextscanner.calc.threedim.PositionCalculator;
 import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.imaging.ImageFiltering;
+import tosatto.nextscanner.imaging.ImagingUtilities;
 import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.ImagePanel;
 import tosatto.nextscanner.ui.SettingsFrame;
@@ -35,7 +36,9 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	
 	private JButton start, stop, save, settings;
 	
-	private JPanel pImgs, pBtns, pWCam, pCfrnt, pV3D, pSouth;
+	private JPanel pImgs, pBtns, pSouth;
+	
+	private ImagePanel pWCam, pCfrnt, pV3D;
 	
 	private PositionCalculator pc;
 	
@@ -64,12 +67,23 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	{
 		JTPane = new JTabbedPane();
 		
-		pWCam = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pWCam = new ImagePanel(ImagePanel.DON_NO_ADAPT);
+		pWCam.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pWCam.setPreferredSize(new Dimension(800, 800));
-		pCfrnt = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pWCam.setBackground(Color.white);
+		pWCam.setImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
+		
+		pCfrnt = new ImagePanel(ImagePanel.DON_NO_ADAPT);
+		pCfrnt.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pCfrnt.setPreferredSize(new Dimension(800, 800));
-		pV3D = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pCfrnt.setBackground(Color.white);
+		pCfrnt.setImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
+		
+		pV3D = new ImagePanel(ImagePanel.DON_NO_ADAPT);
+		pV3D.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pV3D.setPreferredSize(new Dimension(800, 800));
+		pV3D.setBackground(Color.white);
+		pV3D.setImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
 		
 		// setup OpenGL Version 2
     	GLProfile profile = GLProfile.get(GLProfile.GL2);
@@ -85,6 +99,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		JTPane.addTab("Linea Laser", pCfrnt);
 		JTPane.addTab("Vista 3D", pV3D);
 		
+		JTPane.setBackground(Color.white);
 	}
 	
 	private void interfaceSetup()
@@ -92,6 +107,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		//SettingsManager.get().loadSettings();
 		
 		//HardwareManager.get();
+		
 		
 		MT = new ScanningThread(this);
 		
@@ -112,7 +128,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		
 		//pImgs = new JPanel(new GridLayout(0, 2));
 		
-		pImgs = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
+		pImgs = new JPanel(new BorderLayout());
 		
 		pBtns = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 2));
 		
@@ -128,7 +144,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		this.setLayout(new BorderLayout());
 		
 		createTabbedPane();
-		pImgs.add(JTPane);
+		pImgs.add(JTPane, BorderLayout.CENTER);
 		
 		pSouth = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		
@@ -143,16 +159,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		
 		this.setVisible(true);
 		
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream input = classLoader.getResourceAsStream("Icon.png");
-		Image logo;
-		try {
-			logo = ImageIO.read(input);
-			this.setIconImage(logo );
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.setIconImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
 	}
 	
 	public MainWindow ()

@@ -60,6 +60,7 @@ public class SplashScreen extends JFrame implements IInitListener{
 		
 		img = new ImagePanel();
 		img.setBackground(Color.white);
+		//img.setAlpha(100);
 		img.setImage(ImagingUtilities.getImageFromResource("SplashScreen.png"));
 		
 		mainPanel.add(img, c);
@@ -108,6 +109,7 @@ public class SplashScreen extends JFrame implements IInitListener{
 		this.setVisible(true);
 		
 		i.setInitListener(this);
+		
 	}
 
 	@Override

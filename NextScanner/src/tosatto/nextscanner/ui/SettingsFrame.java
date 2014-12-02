@@ -9,6 +9,7 @@ import tosatto.nextscanner.calc.threedim.PositionCalculator;
 import tosatto.nextscanner.calc.threedim.ThreeDimManager;
 import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.imaging.ImageFiltering;
+import tosatto.nextscanner.imaging.ImagingUtilities;
 import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.ImagePanel;
 import tosatto.nextscanner.ui.ogl.MyJoglCanvas;
@@ -271,16 +272,7 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 		this.setVisible(true);
 
 
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream input = classLoader.getResourceAsStream("Icon.png");
-		Image logo;
-		try {
-			logo = ImageIO.read(input);
-			this.setIconImage(logo );
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.setIconImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
 	    
 		
 

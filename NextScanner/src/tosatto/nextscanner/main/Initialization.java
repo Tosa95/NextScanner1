@@ -2,12 +2,19 @@ package tosatto.nextscanner.main;
 
 import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.main.settings.SettingsManager;
+import tosatto.nextscanner.ui.IInitListener;
 
 public class Initialization implements Runnable {
 	private volatile static boolean initialized = false;
 	
 	private volatile double percentage;
 	private volatile String actTask;
+	private volatile IInitListener i;
+	
+	public void setInitListener (IInitListener in)
+	{
+		i = in;
+	}
 
 	public static boolean isInitialized ()
 	{
@@ -41,23 +48,46 @@ public class Initialization implements Runnable {
 		return i;
 	}
 	
+	private void notifyUpdate ()
+	{
+		if (i != null)
+			i.initValuesChanged();
+	}
+	
+	private void setProgress (double perc)
+	{
+		percentage = perc;
+		notifyUpdate();
+	}
+	
+	private void setTask (String tsk)
+	{
+		actTask = tsk;
+		notifyUpdate();
+	}
+	
 	@Override
 	public void run() {
 		
-		percentage = 0.0;
+		setProgress(0);
 		initialized = false;
 		
-		actTask = "Loading settings";
+		setTask("Loading settings");
 		SettingsManager.get().loadSettings();
 		
-		percentage = 10.0;
+		setProgress(2);
 		
-		actTask = "Connecting to hardware";
+		setTask("Connecting to hardware");
 		HardwareManager.get();
 		
-		percentage = 100.0;
-		initialized = true;
+		setProgress (60);
 		
+		setTask("Creating main winsdow");
+		new MainWindow();
+		
+		
+		initialized = true;
+		setProgress(100);
 		
 		
 	}

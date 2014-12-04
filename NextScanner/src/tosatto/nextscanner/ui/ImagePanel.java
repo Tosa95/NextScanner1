@@ -24,7 +24,8 @@ public class ImagePanel extends JPanel{
     public static final int CENTER = 1;
     
     public static final int ADAPT_TO_IMAGE = 0;
-    public static final int DON_NO_ADAPT = 1;
+    public static final int RESIZE_IMAGE = 1;
+    public static final int DON_NO_ADAPT = 2;
     
     public ImagePanel() {
     	
@@ -54,6 +55,11 @@ public class ImagePanel extends JPanel{
     public synchronized BufferedImage getImage ()
     {
     	return image;
+    }
+    
+    private BufferedImage resizeImg ()
+    {
+    	return ImagingUtilities.resizeMantainingRatio(image, new Dimension(this.getWidth(), this.getHeight()));
     }
     
     public synchronized void setImage (BufferedImage img)
@@ -87,7 +93,18 @@ public class ImagePanel extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
     	
+    	BufferedImage finalIm;
+    	
     	super.paintComponent(g);
+    	
+    	if (image != null && adapt == RESIZE_IMAGE)
+     	{
+     		finalIm = resizeImg();
+     	}
+    	else
+    	{
+    		finalIm = image;
+    	}
     	
     	g.setColor(this.getBackground());
     	g.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -96,13 +113,13 @@ public class ImagePanel extends JPanel{
     	
         int x = 0, y = 0;
         
-        if (image != null)
+        if (finalIm != null)
         {
 	        if (imagePosition == CENTER)
 	        {
 	        	
-	        	x = this.getWidth()/2 - image.getWidth()/2;
-	        	y = this.getHeight()/2 - image.getHeight()/2;
+	        	x = this.getWidth()/2 - finalIm.getWidth()/2;
+	        	y = this.getHeight()/2 - finalIm.getHeight()/2;
 	        }
 	        else if (imagePosition == TOPLEFT)
 	        {
@@ -110,7 +127,7 @@ public class ImagePanel extends JPanel{
 	        }
         }
         
-        g.drawImage(image, x, y, null);
+        g.drawImage(finalIm, x, y, null);
         
         
         /*Color c = this.getBackground();

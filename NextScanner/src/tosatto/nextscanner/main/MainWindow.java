@@ -67,10 +67,11 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	{
 		JTPane = new JTabbedPane();
 		
-		pWCam = new ImagePanel(ImagePanel.DON_NO_ADAPT);
+		pWCam = new ImagePanel(ImagePanel.RESIZE_IMAGE);
 		pWCam.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pWCam.setPreferredSize(new Dimension(800, 800));
 		pWCam.setBackground(Color.white);
+		JTPane.addTab("Webcam View", pWCam);
 		pWCam.setImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
 		
 		pCfrnt = new ImagePanel(ImagePanel.DON_NO_ADAPT);
@@ -95,7 +96,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		pCfrnt.add(pRis);
 		pV3D.add(View3D);
 		
-		JTPane.addTab("Webcam View", pWCam);
+		//JTPane.addTab("Webcam View", pWCam);
 		JTPane.addTab("Linea Laser", pCfrnt);
 		JTPane.addTab("Vista 3D", pV3D);
 		

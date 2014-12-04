@@ -1,5 +1,7 @@
 package tosatto.nextscanner.imaging;
 
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
@@ -79,6 +81,45 @@ public class ImagingUtilities {
 		
 		
 		return img;
+	}
+	
+	public static BufferedImage resize (BufferedImage img, Dimension newSize)
+	{
+		BufferedImage resizedImage = new BufferedImage((int)newSize.getWidth(), (int)newSize.getWidth(), img.getType());
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(img, 0, 0, (int)newSize.getWidth(), (int)newSize.getWidth(), null);
+		g.dispose();
+		
+		return resizedImage;
+	}
+	
+	public static BufferedImage resizeMantainingRatio (BufferedImage img, Dimension newSize)
+	{
+		double w = img.getWidth();
+		double h = img.getHeight();
+		
+		if (newSize.getWidth() != 0 && newSize.getHeight() != 0)
+		{
+			double ratioH = h/w;
+			double ratioW = w/h;
+			
+			double newH, newW;
+			
+			newH = newSize.getHeight();
+			newW = newH * ratioW;
+			
+			if (newW > newSize.getWidth())
+			{
+				newW = newSize.getWidth();
+				newH = newW * ratioH;
+			}
+			
+			return resize(img, new Dimension((int)newW, (int)newH));
+		}
+		else
+		{
+			return img;
+		}
 	}
 	
 	

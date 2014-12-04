@@ -71,20 +71,19 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		pWCam.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pWCam.setPreferredSize(new Dimension(800, 800));
 		pWCam.setBackground(Color.white);
-		JTPane.addTab("Webcam View", pWCam);
-		pWCam.setImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
+		pWCam.setImage(ImagingUtilities.getImageFromResource("Background.png"));
 		
-		pCfrnt = new ImagePanel(ImagePanel.DON_NO_ADAPT);
+		pCfrnt = new ImagePanel(ImagePanel.RESIZE_IMAGE);
 		pCfrnt.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pCfrnt.setPreferredSize(new Dimension(800, 800));
 		pCfrnt.setBackground(Color.white);
-		pCfrnt.setImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
+		pCfrnt.setImage(ImagingUtilities.getImageFromResource("Background.png"));
 		
-		pV3D = new ImagePanel(ImagePanel.DON_NO_ADAPT);
+		pV3D = new ImagePanel(ImagePanel.RESIZE_IMAGE);
 		pV3D.setLayout(new FlowLayout(FlowLayout.LEFT));
 		pV3D.setPreferredSize(new Dimension(800, 800));
 		pV3D.setBackground(Color.white);
-		pV3D.setImage(ImagingUtilities.getImageFromResource("BlueLogo.png"));
+		pV3D.setImage(ImagingUtilities.getImageFromResource("Background.png"));
 		
 		// setup OpenGL Version 2
     	GLProfile profile = GLProfile.get(GLProfile.GL2);
@@ -96,7 +95,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		pCfrnt.add(pRis);
 		pV3D.add(View3D);
 		
-		//JTPane.addTab("Webcam View", pWCam);
+		JTPane.addTab("Webcam View", pWCam);
 		JTPane.addTab("Linea Laser", pCfrnt);
 		JTPane.addTab("Vista 3D", pV3D);
 		

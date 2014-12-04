@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -31,15 +32,24 @@ public class ImagingUtilities {
 	
 	public static BufferedImage getImageFromResource (String name)
 	{
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		InputStream input = classLoader.getResourceAsStream(name);
+		
 		BufferedImage img = null;
+			
+		String path = ClassLoader.getSystemResource("").getFile();
+		
+		path = path.substring(0, path.length() - 4);
+		
+		path += "res/img/" + name;
+		
 		try {
-			img = ImageIO.read(input);
+			img = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		
+
 		
 		return img;
 	}

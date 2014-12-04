@@ -67,6 +67,8 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	{
 		this.setTitle("NextScanner");
 		
+		this.setExtendedState(this.getExtendedState()|JFrame.MAXIMIZED_BOTH);
+		
 		JTPane = new JTabbedPane();
 		
 		pWCam = new ImagePanel(ImagePanel.RESIZE_IMAGE);
@@ -82,7 +84,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		pCfrnt.setImage(ImagingUtilities.getImageFromResource("Background.png"));
 		
 		pV3D = new ImagePanel(ImagePanel.RESIZE_IMAGE);
-		pV3D.setLayout(new FlowLayout(FlowLayout.LEFT));
+		pV3D.setLayout(new BorderLayout());
 		pV3D.setPreferredSize(new Dimension(800, 800));
 		pV3D.setBackground(Color.white);
 		pV3D.setImage(ImagingUtilities.getImageFromResource("Background.png"));
@@ -95,7 +97,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		
 		pWCam.add(pImg);
 		pCfrnt.add(pRis);
-		pV3D.add(View3D);
+		pV3D.add(View3D, BorderLayout.CENTER);
 		
 		JTPane.addTab("Webcam View", pWCam);
 		JTPane.addTab("Linea Laser", pCfrnt);

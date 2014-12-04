@@ -85,7 +85,12 @@ public class ImagingUtilities {
 	
 	public static BufferedImage resize (BufferedImage img, Dimension newSize)
 	{
-		BufferedImage resizedImage = new BufferedImage((int)newSize.getWidth(), (int)newSize.getWidth(), img.getType());
+		int type = img.getType();
+		
+		if (type == 0)
+			type = BufferedImage.TYPE_INT_ARGB;
+		
+		BufferedImage resizedImage = new BufferedImage((int)newSize.getWidth(), (int)newSize.getWidth(), type);
 		Graphics2D g = resizedImage.createGraphics();
 		g.drawImage(img, 0, 0, (int)newSize.getWidth(), (int)newSize.getWidth(), null);
 		g.dispose();

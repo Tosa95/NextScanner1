@@ -65,6 +65,8 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	
 	private void createTabbedPane ()
 	{
+		this.setTitle("NextScanner");
+		
 		JTPane = new JTabbedPane();
 		
 		pWCam = new ImagePanel(ImagePanel.RESIZE_IMAGE);

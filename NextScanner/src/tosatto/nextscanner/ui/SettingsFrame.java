@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import tosatto.nextscanner.calc.threedim.PositionCalculator;
 import tosatto.nextscanner.calc.threedim.ThreeDimManager;
@@ -25,7 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SettingsFrame extends JFrame implements ActionListener, WindowListener, MouseMotionListener, PointsChangedListener{
+public class SettingsFrame extends JFrame implements ActionListener, WindowListener, MouseMotionListener, PointsChangedListener, ChangeListener{
 	
 	
 	BufferedImage image, redLine, cmp1, cmp2, ris;
@@ -37,9 +39,9 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 	private JButton save;
 	
 	private JPanel pBtns;	//Bottoni (NORTH)
-	private JPanel pCalib;	//Pannello principale tab Calibrazione
+	private ImagePanel pCalib;	//Pannello principale tab Calibrazione
 	private JPanel pCalPar;	//Parametri di calibrazione
-	private JPanel pResolution; //Controlli di settaggio risoluzione
+	private ImagePanel pResolution; //Controlli di settaggio risoluzione
 	
 	private JTextField point1, point2; //Campi di testo contenenti le coordinate delle due linee
 	
@@ -70,10 +72,14 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 		
 		pImg.setPreferredSize(new Dimension((int)SettingsManager.get().getValue("WCAM_WIDTH"), (int)SettingsManager.get().getValue("WCAM_HEIGHT")));
 		
-		pCalib = new JPanel(new GridLayout(2, 0));
+		pCalib = new ImagePanel(ImagePanel.RESIZE_IMAGE);
+		pCalib.setLayout(new GridLayout(2, 0));
+		pCalib.setImage(ImagingUtilities.getImageFromResource("Background.png"));
+		pCalib.setBackground(Color.white);
 		pCalib.setPreferredSize(new Dimension(640, 480));
 		
 		pCalPar = new JPanel(new GridBagLayout());
+		pCalPar.setBackground(new Color(255, 255, 255, 0));
 		
 		GridBagConstraints c = new GridBagConstraints();
 		
@@ -129,7 +135,10 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 		
 		JTPane.addTab("Calibration", pCalib);
 		
-		pResolution = new JPanel(new GridBagLayout());
+		pResolution = new ImagePanel(ImagePanel.RESIZE_IMAGE);
+		pResolution.setLayout(new GridLayout(2, 0));
+		pResolution.setBackground(Color.white);
+		pResolution.setImage(ImagingUtilities.getImageFromResource("Background.png"));
 		
 		resL = new JLabel();
 		
@@ -151,6 +160,9 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 		pResolution.add(resL, c);
 		
 		resolution = new JSlider(JSlider.HORIZONTAL, 0, 100, (int)(double)SettingsManager.get().getValue("RESOLUTION"));
+		
+		resolution.setBackground(new Color (255,255,255,0));
+		resolution.addChangeListener(this);
 		
 		resolution.setMinorTickSpacing(1);
 		resolution.setMajorTickSpacing(10);
@@ -186,7 +198,7 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 		c.gridx = 0;
 		c.gridy = 1;
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.NONE;
 		
 		c.weightx = 0.5;
 		c.weighty = 0.1;
@@ -197,6 +209,12 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 		pResolution.add(vResL, c);
 		
 		vRes = new JSlider(JSlider.HORIZONTAL, 0, 100, (int)(double)SettingsManager.get().getValue("VERT_RES"));
+		
+		vRes.addChangeListener(this);
+		
+		vRes.setBackground(new Color (255, 255, 255, 0));
+		
+		//vRes.setPreferredSize(new Dimension (1000, 30));
 		
 		vRes.setMinorTickSpacing(1);
 		vRes.setMajorTickSpacing(10);
@@ -226,6 +244,8 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 	
 	public SettingsFrame ()
 	{	
+		this.setTitle("Impostazioni");
+		
 		ct = new CalibrationThread(this);
 		
 		pImg = new CalibrationImagePanel();
@@ -362,5 +382,12 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 		printPoints();
 		
 		
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent arg0) {
+		// TODO Auto-generated method stub
+		
+		this.repaint();
 	}
 }

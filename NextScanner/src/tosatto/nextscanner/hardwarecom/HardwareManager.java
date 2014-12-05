@@ -3,7 +3,13 @@ package tosatto.nextscanner.hardwarecom;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import tosatto.nextscanner.hardwarecom.fake.FakeLaser;
+import tosatto.nextscanner.hardwarecom.fake.FakeMotor;
+import tosatto.nextscanner.hardwarecom.fake.FakeWebcam;
 import tosatto.nextscanner.imaging.ImagingUtilities;
+import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.INotificationListener;
+import tosatto.nextscanner.main.notifier.Notifier;
 import tosatto.nextscanner.main.settings.SettingsManager;
 
 /**
@@ -12,7 +18,7 @@ import tosatto.nextscanner.main.settings.SettingsManager;
  * Class that manages the hardware
  *
  */
-public class HardwareManager implements IWebcamListener {
+public class HardwareManager implements IWebcamListener, INotificationListener{
 
 public static final int PIC_WAIT_TIME_OFF = (int)SettingsManager.get().getValue("PIC_WAIT_TIME_OFF");	//Time waited between laser change and pic capture
 public static final int PIC_WAIT_TIME_ON = (int)SettingsManager.get().getValue("PIC_WAIT_TIME_ON");	//Time waited between laser change and pic capture
@@ -25,6 +31,8 @@ public static final int WCAM_ID = (int)SettingsManager.get().getValue("WCAM_ID")
 public static final int SERIAL_BAUD = (int)SettingsManager.get().getValue("SERIAL_BAUD");				//Serial Port Baud Rate
 public static final int SERIAL_TOUT = (int)SettingsManager.get().getValue("SERIAL_TOUT");				//Serial Port Timeout
 public static final String[] SERIAL_PNAMES = {(String)SettingsManager.get().getValue("SERIAL_PNAME")};		//Serial Port Names
+
+public static final boolean FAKE_MODE = true;
 
 private IWebcam cam;
 private ILaser laser;
@@ -41,11 +49,20 @@ private static HardwareManager HM = null;
 
 	private void initHWComm ()
 	{
-		serial = new SerialControl(SERIAL_BAUD, SERIAL_TOUT, SERIAL_PNAMES);
-		cam = new usbWebCam(WCAM_FPS, WCAM_WIDTH, WCAM_HEIGHT, WCAM_ID);
-		cam.addIWebcamListener(this);
-		laser = new SerialLaser(serial);
-		motor = new SerialMotor(serial);
+		if (!FAKE_MODE)
+		{
+			serial = new SerialControl(SERIAL_BAUD, SERIAL_TOUT, SERIAL_PNAMES);
+			cam = new usbWebCam(WCAM_FPS, WCAM_WIDTH, WCAM_HEIGHT, WCAM_ID);
+			cam.addIWebcamListener(this);
+			laser = new SerialLaser(serial);
+			motor = new SerialMotor(serial);
+		}
+		else
+		{
+			cam = new FakeWebcam();
+			laser = new FakeLaser();
+			motor = new FakeMotor();
+		}
 	}
 	
 	private void initVariables ()
@@ -60,6 +77,8 @@ private static HardwareManager HM = null;
 	{
 		initHWComm();
 		initVariables();
+		
+		Notifier.get().addListener(this, new EventCategory("webcam:frame", 2));
 	}
 	
 	public static HardwareManager get ()
@@ -135,7 +154,8 @@ private static HardwareManager HM = null;
 	
 	public void close ()
 	{
-		serial.close();
+		if (!FAKE_MODE)
+			serial.close();
 		cam.close();
 	}
 	
@@ -152,5 +172,12 @@ private static HardwareManager HM = null;
 	public ILaser getLaser ()
 	{
 		return laser;
+	}
+
+	@Override
+	public void eventRaised(String eName, EventCategory eCat, Object eData) {
+
+		newFrame((BufferedImage)eData, cam);
+		
 	}
 }

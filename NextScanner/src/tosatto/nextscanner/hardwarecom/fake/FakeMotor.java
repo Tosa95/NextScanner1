@@ -1,16 +1,10 @@
-package tosatto.nextscanner.hardwarecom;
+package tosatto.nextscanner.hardwarecom.fake;
 
+import tosatto.nextscanner.hardwarecom.IMotor;
 import tosatto.nextscanner.main.notifier.EventCategory;
 import tosatto.nextscanner.main.notifier.Notifier;
 
-public class SerialMotor implements IMotor {
-	
-	SerialControl serial;
-	
-	public SerialMotor (SerialControl s)
-	{
-		serial = s;
-	}
+public class FakeMotor implements IMotor {
 
 	private void sendState (int state)
 	{
@@ -22,10 +16,9 @@ public class SerialMotor implements IMotor {
 		
 		sendState(IMotor.BEFORE_STEP);
 		
-		boolean res = serial.step();
-		
 		sendState(IMotor.AFTER_STEP);
 		
-		return res;
+		return true;
 	}
+
 }

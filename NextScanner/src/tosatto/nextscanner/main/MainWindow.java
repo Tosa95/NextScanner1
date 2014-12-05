@@ -8,6 +8,8 @@ import tosatto.nextscanner.calc.threedim.PositionCalculator;
 import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.imaging.ImageFiltering;
 import tosatto.nextscanner.imaging.ImagingUtilities;
+import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.Notifier;
 import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.ImagePanel;
 import tosatto.nextscanner.ui.SettingsFrame;
@@ -229,11 +231,15 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
+		
+		Notifier.get().raiseEvent("Application closing", new EventCategory ("application:state", 9), null);
+		
     	HardwareManager.get().close();
     	MT.finish();
     	ThreadManager.killAll();
-    	System.out.println ("Erano aperti :" + Integer.toString(ThreadManager.getThreadNumber()) + " thread\n");
-    	System.out.println("Resources are now free");
+    	
+    	Notifier.get().raiseEvent("Application closed. "  + Integer.toString(ThreadManager.getThreadNumber()) + " thread were open.", new EventCategory ("application:state", 9), null);
+		
     	System.exit(0);
 	}
 

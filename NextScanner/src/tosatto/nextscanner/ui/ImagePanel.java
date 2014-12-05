@@ -25,7 +25,7 @@ public class ImagePanel extends JPanel{
     
     public static final int ADAPT_TO_IMAGE = 0;
     public static final int RESIZE_IMAGE = 1;
-    public static final int DON_NO_ADAPT = 2;
+    public static final int DO_NOT_ADAPT = 2;
     
     public ImagePanel() {
     	

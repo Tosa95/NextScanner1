@@ -6,6 +6,8 @@ import java.awt.image.WritableRaster;
 import java.util.*;
 
 import tosatto.nextscanner.main.ThreadManager;
+import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.Notifier;
 
 import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamMotionDetector;
@@ -25,6 +27,11 @@ public class usbWebCam implements IWebcam, Runnable {
 	volatile boolean run;
 	
 	volatile Thread t;
+	
+	private void sendNewFrame ()
+	{
+		Notifier.get().raiseEvent("WebcamNewFrame", new EventCategory("webcam:frame", 2), actFrame);
+	}
 	
 	static BufferedImage deepCopy(BufferedImage bi) {
 		 ColorModel cm = bi.getColorModel();
@@ -113,6 +120,8 @@ public class usbWebCam implements IWebcam, Runnable {
 			for (int i = 0; i < webList.size(); i++)
 				webList.get(i).newFrame(actFrame, this);
 		}
+		
+		sendNewFrame();
 	}
 
 }

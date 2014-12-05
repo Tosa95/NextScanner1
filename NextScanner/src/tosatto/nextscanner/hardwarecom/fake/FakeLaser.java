@@ -1,41 +1,30 @@
-package tosatto.nextscanner.hardwarecom;
+package tosatto.nextscanner.hardwarecom.fake;
 
+import tosatto.nextscanner.hardwarecom.ILaser;
 import tosatto.nextscanner.main.notifier.EventCategory;
 import tosatto.nextscanner.main.notifier.Notifier;
 
-public class SerialLaser implements ILaser{
-
-	SerialControl serial;
+public class FakeLaser implements ILaser {
 	
 	private void sendState (boolean state)
 	{
 		Notifier.get().raiseEvent("Laser state change", new EventCategory("laser:state", 5), new Boolean (state));
 	}
 	
-	public SerialLaser (SerialControl s)
-	{
-		serial = s;
-	}
-	
 	@Override
 	public boolean beamON() {
+
+		sendState(true);
 		
-		boolean res = serial.laserON();
-		
-		this.sendState(true);
-		
-		return res;
-		
+		return true;
 	}
 
 	@Override
 	public boolean beamOFF() {
+
+		sendState(false);
 		
-		boolean res = serial.laserOFF();
-		
-		this.sendState(false);
-		
-		return res;
+		return true;
 	}
 
 }

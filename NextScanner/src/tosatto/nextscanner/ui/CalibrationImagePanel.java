@@ -29,11 +29,15 @@ public class CalibrationImagePanel extends ImagePanel implements MouseListener, 
 	{
 		if (pcl != null)
 			pcl.PointsChanged();
+		
+		this.repaint();
 	}
 	
 	public CalibrationImagePanel ()
 	{
-		super();
+		super(ImagePanel.DO_NOT_ADAPT);
+		
+		super.setImagePosition(ImagePanel.TOPLEFT);
 		
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);

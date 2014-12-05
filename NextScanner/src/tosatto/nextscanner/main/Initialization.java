@@ -1,6 +1,9 @@
 package tosatto.nextscanner.main;
 
 import tosatto.nextscanner.hardwarecom.HardwareManager;
+import tosatto.nextscanner.main.notifier.BasicNotifier;
+import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.Notifier;
 import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.IInitListener;
 
@@ -66,8 +69,19 @@ public class Initialization implements Runnable {
 		notifyUpdate();
 	}
 	
+	private void sendState (String actState)
+	{
+		Notifier.get().raiseEvent (actState,  new EventCategory("initialization:state", 7), null);
+	}
+	
 	@Override
 	public void run() {
+		
+		Notifier.setNotifier(new BasicNotifier());
+		
+		Notifier.get().addListener(new Logger(), new EventCategory("", 5));
+		
+		sendState ("Initialization started");
 		
 		setProgress(0);
 		initialized = false;
@@ -75,20 +89,26 @@ public class Initialization implements Runnable {
 		setTask("Loading settings");
 		SettingsManager.get().loadSettings();
 		
+		sendState ("SettingsLoaded");
+		
 		setProgress(2);
 		
 		setTask("Connecting to hardware");
 		HardwareManager.get();
+		
+		sendState ("Connected to hardware");
 		
 		setProgress (60);
 		
 		setTask("Creating main window");
 		new MainWindow();
 		
+		sendState ("Main window created");
 		
 		initialized = true;
 		setProgress(100);
 		
+		sendState ("Initialization completed");
 		
 	}
 }

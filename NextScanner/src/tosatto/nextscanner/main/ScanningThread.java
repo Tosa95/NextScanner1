@@ -27,6 +27,9 @@ import tosatto.nextscanner.hardwarecom.IWebcamListener;
 import tosatto.nextscanner.hardwarecom.SerialControl;
 import tosatto.nextscanner.hardwarecom.usbWebCam;
 import tosatto.nextscanner.imaging.*;
+import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.INotificationListener;
+import tosatto.nextscanner.main.notifier.Notifier;
 import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.ogl.MyJoglCanvas;
 import tosatto.nextscanner.ui.ogl.Renderer;
@@ -34,7 +37,7 @@ import tosatto.nextscanner.calc.threedim.*;
 
 
 
-public class ScanningThread extends Thread implements INewFrameListener{
+public class ScanningThread extends Thread implements INotificationListener{
 	
 private static final int STEPS = (int)SettingsManager.get().getValue("STEPS");
 private static final double RESOLUTION = (double)SettingsManager.get().getValue("RESOLUTION");
@@ -52,9 +55,9 @@ ThreeDimManager TDM = new ThreeDimManager(HardwareManager.WCAM_WIDTH, HardwareMa
 	{
 		super();
 		
-		main = mw;
+		Notifier.get().addListener(this, new EventCategory("webcam:frame"));
 		
-		HardwareManager.get().addINewFrameListener(this);
+		main = mw;
 	}
 	
 	@Override
@@ -139,8 +142,6 @@ ThreeDimManager TDM = new ThreeDimManager(HardwareManager.WCAM_WIDTH, HardwareMa
 	public void finish()
 	{
 		run = false;
-		//while (!finished);
-		HardwareManager.get().addINewFrameListener(this);
 	}
 	
 	public void start()
@@ -156,18 +157,17 @@ ThreeDimManager TDM = new ThreeDimManager(HardwareManager.WCAM_WIDTH, HardwareMa
 	{
 		return finished;
 	}
-
-	@Override
-	public void newFrame(BufferedImage I) {
-		
-		if (main.pImg != null)
-			main.pImg.setImage(I);
-		
-	}
 	
 	protected ThreeDimManager getTDM()
 	{
 		return TDM;
+	}
+
+	@Override
+	public void eventRaised(String eName, EventCategory eCat, Object eData) {
+		
+		
+		
 	}
 	
 

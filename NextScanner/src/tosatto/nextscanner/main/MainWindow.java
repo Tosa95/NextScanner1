@@ -9,6 +9,7 @@ import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.imaging.ImageFiltering;
 import tosatto.nextscanner.imaging.ImagingUtilities;
 import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.INotificationListener;
 import tosatto.nextscanner.main.notifier.Notifier;
 import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.ImagePanel;
@@ -26,7 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class MainWindow extends JFrame implements ActionListener, WindowListener, MouseMotionListener{
+public class MainWindow extends JFrame implements ActionListener, WindowListener, MouseMotionListener, INotificationListener{
 	
 	
 	
@@ -170,6 +171,8 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	
 	public MainWindow ()
 	{	
+		Notifier.get().addListener(this, new EventCategory("webcam:frame"));
+		
 		interfaceSetup();
 	    
 		enableScanning();
@@ -328,5 +331,16 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		SettingsFrame SF = new SettingsFrame();
 		
 		SF.setVisible(true);
+	}
+
+	@Override
+	public void eventRaised(String eName, EventCategory eCat, Object eData) {
+		
+		if (new EventCategory ("webcam:frame").sameCategory(eCat))
+		{
+			if (pImg != null)
+				pImg.setImage((BufferedImage) eData);
+		}
+		
 	}
 }

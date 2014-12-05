@@ -5,7 +5,7 @@ import java.util.List;
 
 public class BasicNotifier extends Notifier {
 	
-	List <ListenerListEntry> listenerList = new ArrayList<ListenerListEntry>();
+	private volatile List <ListenerListEntry> listenerList = new ArrayList<ListenerListEntry>();
 
 	public BasicNotifier ()
 	{
@@ -13,9 +13,12 @@ public class BasicNotifier extends Notifier {
 	}
 	
 	@Override
-	public void raiseEvent(String eName, EventCategory eCat, Object eData) {
+	public synchronized void raiseEvent(String eName, EventCategory eCat, Object eData) {
 		
-		for (ListenerListEntry l: listenerList)
+		//For concurrency troubles
+		List <ListenerListEntry> copy = new ArrayList<ListenerListEntry>(listenerList);
+		
+		for (ListenerListEntry l: copy)
 		{
 			if (l.getEventCategory().eventCompatible(eCat))
 			{
@@ -27,22 +30,28 @@ public class BasicNotifier extends Notifier {
 	}
 
 	@Override
-	public void addListener(INotificationListener lst, EventCategory eCat) {
+	public synchronized void addListener(INotificationListener lst, EventCategory eCat) {
 		
 		listenerList.add(new ListenerListEntry(lst, eCat));
 
 	}
 
 	@Override
-	public void removeListener(INotificationListener lst) {
+	public synchronized void removeListener(INotificationListener lst) {
 		
-		for (ListenerListEntry l: listenerList)
+		//For concurrency troubles
+		List <ListenerListEntry> copy = new ArrayList<ListenerListEntry>(listenerList);
+		
+		for (int i = 0; i < copy.size(); i++)
 		{
-			if (l.getListener() == lst)
+			if (copy.get(i).getListener() == lst)
 			{
-				listenerList.remove(l);
+				copy.remove(i);
+				i--;
 			}
 		}
+		
+		listenerList = copy;
 
 	}
 

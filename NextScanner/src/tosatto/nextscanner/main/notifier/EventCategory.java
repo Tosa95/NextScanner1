@@ -29,6 +29,14 @@ public class EventCategory {
 		createList();
 	}
 	
+	public EventCategory (String category)
+	{
+		this.priority = 0;
+		this.category = category;
+		
+		createList();
+	}
+	
 	public String getCategory ()
 	{
 		return category;
@@ -41,6 +49,14 @@ public class EventCategory {
 	
 	public boolean eventCompatible (EventCategory eCat)
 	{
+		if (categoryCompatible(eCat) && eCat.getPriority() >= this.getPriority())
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean categoryCompatible (EventCategory eCat)
+	{
 		for (int i = 0; i < catList.size(); i++)
 		{
 			String c1 = eCat.catList.get(i);
@@ -52,7 +68,25 @@ public class EventCategory {
 				return false;
 		}
 		
-		if (eCat.getPriority() >= this.getPriority())
+		return true;
+	}
+	
+	public boolean sameCategory (EventCategory eCat)
+	{
+		int i;
+		
+		for (i = 0; i < catList.size(); i++)
+		{
+			String c1 = eCat.catList.get(i);
+			String c2 = catList.get(i);
+			
+			boolean b = !c1.equals(c2);
+			
+			if (i >= eCat.catList.size() || b)
+				return false;
+		}
+		
+		if (i == eCat.catList.size())
 			return true;
 		else
 			return false;

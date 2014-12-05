@@ -15,9 +15,12 @@ public class FakeWebcam implements IWebcam, INotificationListener {
 	
 	public FakeWebcam()
 	{
-		actFrame = ImagingUtilities.getImageFromResource("fake/LaserOn.png");
+		actFrame = ImagingUtilities.getImageFromResource("fake/LaserOff.png");
+		
+		sendNewFrame();
 		
 		Notifier.get().addListener(this, new EventCategory ("laser:state", 0));
+		Notifier.get().addListener(this, new EventCategory ("initialization:state", 0));
 	}
 	
 	@Override
@@ -53,6 +56,10 @@ public class FakeWebcam implements IWebcam, INotificationListener {
 			else
 				actFrame = ImagingUtilities.getImageFromResource("fake/LaserOff.png");
 			
+			sendNewFrame();
+		}
+		else if (eName.equals("Main window created"))
+		{
 			sendNewFrame();
 		}
 		

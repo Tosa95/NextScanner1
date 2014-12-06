@@ -41,5 +41,10 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="NextScanner/lib/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/la4j-0.4.9/bin/la4j-0.4.9.jar" sourcepath="lib/la4j-0.4.9/src">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/Davide/Documenti/GitHub/NextScanner1/NextScanner/lib/la4j-0.4.9/apidocs/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

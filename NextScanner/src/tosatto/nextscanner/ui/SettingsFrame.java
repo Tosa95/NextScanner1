@@ -246,12 +246,15 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 	{	
 		this.setTitle("Impostazioni");
 		
+		this.addWindowListener(this);
+		
 		ct = new CalibrationThread(this);
 		
 		pImg = new CalibrationImagePanel();
 		pImg.addMouseMotionListener(this);
 		pImg.setPointsChangedListener(this);
 		pImg.setPointLow(new Point (0, (int)(double)SettingsManager.get().getValue("Z_MIN_PX")));
+		
 		
 		point1 = new JTextField();
 		point2 = new JTextField();
@@ -338,7 +341,8 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
-    	
+		HardwareManager.get().getLaser().beamOFF();
+		ct.finish();
 	}
 
 	@Override
@@ -381,6 +385,7 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 		// TODO Auto-generated method stub
 		printPoints();
 		
+		this.repaint();
 		
 	}
 

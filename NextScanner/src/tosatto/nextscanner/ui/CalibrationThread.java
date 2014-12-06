@@ -26,13 +26,16 @@ import tosatto.nextscanner.hardwarecom.IWebcamListener;
 import tosatto.nextscanner.hardwarecom.SerialControl;
 import tosatto.nextscanner.hardwarecom.usbWebCam;
 import tosatto.nextscanner.imaging.*;
+import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.INotificationListener;
+import tosatto.nextscanner.main.notifier.Notifier;
 import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.ogl.MyJoglCanvas;
 import tosatto.nextscanner.ui.ogl.Renderer;
 
 
 
-public class CalibrationThread extends Thread implements INewFrameListener{
+public class CalibrationThread extends Thread implements INotificationListener{
 	
 private boolean run = true, finished = false;
 int actPos = 0;
@@ -45,7 +48,7 @@ SettingsFrame main;
 		
 		main = mw;
 		
-		HardwareManager.get().addINewFrameListener(this);
+		Notifier.get().addListener(this, new EventCategory("webcam:frame"));
 	}
 	
 	@Override
@@ -58,7 +61,7 @@ SettingsFrame main;
 	{
 		run = false;
 		//while (!finished);
-		HardwareManager.get().addINewFrameListener(this);
+		Notifier.get().removeListener(this);
 	}
 	
 	public void start()
@@ -75,10 +78,13 @@ SettingsFrame main;
 	}
 
 	@Override
-	public void newFrame(BufferedImage I) {
-		
-		if (main.pImg != null)
-			main.pImg.setImage(I);
+	public void eventRaised(String eName, EventCategory eCat, Object eData) {
+
+		if (eCat.sameCategory(new EventCategory("webcam:frame")))
+		{
+			if (main.pImg != null)
+				main.pImg.setImage((BufferedImage) eData);
+		}
 		
 	}
 	

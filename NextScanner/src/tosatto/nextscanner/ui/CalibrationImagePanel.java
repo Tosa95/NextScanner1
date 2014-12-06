@@ -44,6 +44,8 @@ public class CalibrationImagePanel extends ImagePanel implements MouseListener, 
 		
 		p1 = new Point(0, 0);
 		p2 = new Point(0, 0);
+		
+		this.setBackground(new Color (255, 255, 255, 0));
 	}
 
 	private int pointClicked (int x, int y)
@@ -129,16 +131,22 @@ public class CalibrationImagePanel extends ImagePanel implements MouseListener, 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        g.setColor(Color.green);
-        g.drawLine(0, p2.y, this.getWidth(), p2.y);
-        g.fillRect(0, (int)(p2.getY()-rectDim.getHeight()/2), (int)rectDim.getWidth(), (int)rectDim.getHeight());
-        
-        g.setColor(Color.red);
-        g.drawLine(0, p1.y, this.getWidth(), p1.y);
-        g.fillRect(0, (int)(p1.getY()-rectDim.getHeight()/2), (int)rectDim.getWidth(), (int)rectDim.getHeight());
-        
-        g.setColor(Color.yellow);
-        g.drawLine(this.getWidth()/2, 0, this.getWidth()/2, this.getHeight());
+        if (super.getImage() != null)
+        {
+	        int height = super.getImage().getHeight();
+	        int width = super.getImage().getWidth();
+	        
+	        g.setColor(Color.green);
+	        g.drawLine(0, p2.y, width, p2.y);
+	        g.fillRect(0, (int)(p2.getY()-rectDim.getHeight()/2), (int)rectDim.getWidth(), (int)rectDim.getHeight());
+	        
+	        g.setColor(Color.red);
+	        g.drawLine(0, p1.y, width, p1.y);
+	        g.fillRect(0, (int)(p1.getY()-rectDim.getHeight()/2), (int)rectDim.getWidth(), (int)rectDim.getHeight());
+	        
+	        g.setColor(Color.yellow);
+	        g.drawLine(width/2, 0, width/2, height);
+        }
     }
 
 	@Override

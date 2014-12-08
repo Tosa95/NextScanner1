@@ -15,7 +15,7 @@
   <setting name="CAM_FOV" value="0.9075712110370513" type="class java.lang.Double" />
   <setting name="CAM_B" value="0.4487989505128276" type="class java.lang.Double" />
   <setting name="CAM_D" value="0.5" type="class java.lang.Double" />
-  <setting name="Z_MIN" value="-0.09960739120780929" type="class java.lang.Double" />
-  <setting name="Z_MIN_PX" value="172" type="class java.lang.Double" />
+  <setting name="Z_MIN" value="-0.14368755132563507" type="class java.lang.Double" />
+  <setting name="Z_MIN_PX" value="194" type="class java.lang.Double" />
   <setting name="RENDER_EDGES" value="0" type="class java.lang.Integer" />
 </settings>

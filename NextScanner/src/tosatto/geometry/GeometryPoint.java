@@ -33,4 +33,19 @@ public class GeometryPoint extends GeometryObject {
 	{
 		return GeometryUtils.PointDistance(this, p);
 	}
+	
+	public double getX ()
+	{
+		return coordinates[0];
+	}
+	
+	public double getY ()
+	{
+		return coordinates[1];
+	}
+	
+	public double getZ ()
+	{
+		return coordinates[2];
+	}
 }

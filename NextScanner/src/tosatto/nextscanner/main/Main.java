@@ -1,5 +1,6 @@
 package tosatto.nextscanner.main;
 
+import tosatto.geometry.GeometryLine;
 import tosatto.geometry.GeometryPlane;
 import tosatto.geometry.GeometryPoint;
 import tosatto.nextscanner.ui.SplashScreen;
@@ -34,10 +35,11 @@ public class Main {
 		GeometryPlane pl = new GeometryPlane(2, 3, 1, 0);
 		GeometryPlane pl1 = new GeometryPlane(p1, p2, p3);
 		
-		System.out.println(p1.toString());
-		System.out.println(p2.toString());
-		System.out.println(p1.getDistance(p2));
+		GeometryLine l1 = new GeometryLine(p1, p2);
 		
-		System.out.println(pl.toString());
+		l1.getDirectorParameters();
+		
+		pl.normalize();
+
 	}
 }

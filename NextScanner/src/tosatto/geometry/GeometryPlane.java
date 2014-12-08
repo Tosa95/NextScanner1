@@ -5,10 +5,16 @@ import org.la4j.linear.LinearSystemSolver;
 import org.la4j.matrix.Matrix;
 import org.la4j.matrix.sparse.CRSMatrix;
 import org.la4j.vector.Vector;
+import org.la4j.vector.Vectors;
 import org.la4j.vector.dense.BasicVector;
 
 public class GeometryPlane extends GeometryObject {
 	private double [] coefficients;
+	
+	public void normalize ()
+	{
+		coefficients = GeometryUtils.normalizeVector(coefficients);
+	}
 	
 	public GeometryPlane (double a, double b, double c, double d)
 	{
@@ -94,6 +100,31 @@ public class GeometryPlane extends GeometryObject {
 		coefficients[1] = -mb.determinant();
 		coefficients[2] = mc.determinant();
 		coefficients[3] = -md.determinant();
+	}
+	
+	public double [] getCoefficients ()
+	{
+		return coefficients;
+	}
+	
+	public double getA()
+	{
+		return coefficients[0];
+	}
+	
+	public double getB()
+	{
+		return coefficients[1];
+	}
+	
+	public double getC()
+	{
+		return coefficients[2];
+	}
+	
+	public double getD()
+	{
+		return coefficients[3];
 	}
 	
 	@Override

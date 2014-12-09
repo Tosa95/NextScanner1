@@ -66,6 +66,11 @@ public class GeometryLine extends GeometryObject {
 		planes[1].normalize();
 	}
 	
+	public GeometryPlane[] getPlanes()
+	{
+		return planes;
+	}
+	
 	@Override
 	public String toString ()
 	{

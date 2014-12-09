@@ -9,11 +9,6 @@ import org.la4j.vector.dense.BasicVector;
 
 public class GeometryUtils {
 	
-	public static int POSITION_PARALLEL = 0;
-	public static int POSITION_SKEW = 1;
-	public static int POSITION_INCIDENT = 2;
-	public static int POSITION_COINCIDENT = 3;
-	
 	public static double PointDistance (GeometryPoint p1, GeometryPoint p2)
 	{
 		double a, b, c;

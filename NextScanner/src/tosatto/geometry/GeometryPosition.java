@@ -208,6 +208,49 @@ public class GeometryPosition {
 		
 	}
 	
+	public static boolean areAllineated (GeometryPoint p1, GeometryPoint p2, GeometryPoint p3)
+	{
+		if (getPosition(p1,p2).isCoincident() == false)
+		{
+			GeometryLine l = new GeometryLine(p1, p2);
+			
+			if (getPosition(p3, l).isAppartenent() == true)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public static boolean areProperStar (GeometryPlane p1, GeometryPlane p2, GeometryPlane p3)
+	{
+		double [][] mtrx =
+			{
+				p1.getCoefficients(),
+				p2.getCoefficients(),
+				p3.getCoefficients()
+			};
+		
+		Matrix AB = new Basic2DMatrix(mtrx);
+		
+		Matrix A = GeometryUtils.removeColumn(AB, 3);
+		
+		int rankAB = AB.rank();
+		int rankA = A.rank();
+		
+		if (rankAB == rankA && rankA == 3)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public String toString()
 	{

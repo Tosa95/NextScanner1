@@ -123,6 +123,11 @@ public class GeometryPlane extends GeometryObject {
 		}
 	}
 	
+	public GeometryPlane (GeometryPoint p, GeometryLine l)
+	{
+		this (p, l.getPoint(0), l.getPoint(1));
+	}
+	
 	public double [] getCoefficients ()
 	{
 		return coefficients;

@@ -1,12 +1,16 @@
 package tosatto.nextscanner.main;
 
+import java.awt.Color;
+
 import tosatto.geometry.GeometryIntersection;
 import tosatto.geometry.GeometryLine;
 import tosatto.geometry.GeometryPlane;
 import tosatto.geometry.GeometryPoint;
 import tosatto.geometry.GeometryPosition;
+import tosatto.geometry.GeometrySpace;
 import tosatto.geometry.GeometryTransformation;
 import tosatto.nextscanner.ui.SplashScreen;
+import tosatto.nextscanner.ui.ogl.Renderer;
 
 public class Main {
 	public static void main (String[] args)
@@ -31,18 +35,9 @@ public class Main {
 	
 	private static void testGeometry ()
 	{
-		GeometryPoint p1 = new GeometryPoint(2, 2, 0);
-		GeometryPoint p2 = new GeometryPoint(1, 5, 0);
-		GeometryPoint p3 = new GeometryPoint(3, 3, 0);
-		GeometryPoint p4 = new GeometryPoint(5, 7, 2);
 		
-		double [] trVect = {3, 0, 0};
+		GeometrySpace GS = new GeometrySpace(2, new Renderer());
 		
-		GeometryPlane pl = new GeometryPlane(p1, p2, p3);
-		GeometryLine l = new GeometryLine(p1, p4);
-		
-		p2 = GeometryTransformation.translate(p1, trVect);
-
-		GeometryIntersection.intersect(pl, l);
+		GS.addObject("r", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 1, 0)), Color.white);
 	}
 }

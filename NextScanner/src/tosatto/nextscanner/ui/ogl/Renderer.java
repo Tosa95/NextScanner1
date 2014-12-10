@@ -1,4 +1,5 @@
 package tosatto.nextscanner.ui.ogl;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,14 +9,18 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
+import tosatto.geometry.GeometryPoint;
+import tosatto.geometry.IGeometryRenderer;
 import tosatto.nextscanner.calc.threedim.Point3D;
 import tosatto.nextscanner.calc.threedim.Point3DManipulationUtilities;
  
-public class Renderer implements GLEventListener 
+public class Renderer implements GLEventListener, IGeometryRenderer
 {
     private GLU glu = new GLU();
  
     private List<Point3D []> faces;
+    private List<Color> faceColors;
+    private List<Color> edgeColors;
     
     private GLAutoDrawable glAD = null;
     
@@ -39,14 +44,23 @@ public class Renderer implements GLEventListener
     	//AddFace(face1);
     }
     
+    public void AddFace (Point3D[] points, Color face, Color edge)
+    {
+    	faceColors.add(face);
+    	edgeColors.add(edge);
+    	faces.add(points);
+    }
+    
     public void AddFace (Point3D[] points)
     {
-    	faces.add(points);
+    	AddFace (points, new Color(107, 179, 253, 255), Color.white);
     }
     
     public void clear()
     {
     	faces = new ArrayList<Point3D[]>();
+    	faceColors = new ArrayList<Color>();
+    	edgeColors = new ArrayList<Color>();
 
     	reset = true;
     }
@@ -79,9 +93,9 @@ public class Renderer implements GLEventListener
      // Prepare light parameters.
         float SHINE_ALL_DIRECTIONS = 1;
         float[] lightPos = {0, -3, 1, SHINE_ALL_DIRECTIONS};
-        float[] lightColorAmbient = {0.1f, 0.1f, 0.1f, 1f};
-        float[] lightColorSpecular = { 1f, 0.6f, 0f, 1f };
-        float[] lightColorDiffuse = {1f, 1f, 1f, 1f};
+        float[] lightColorAmbient = {0.3f, 0.3f, 0.3f, 1f};
+        float[] lightColorSpecular = { 0.3f, 0.3f, 0.3f, 1f };
+        float[] lightColorDiffuse = {0.3f, 0.3f, 0.3f, 1f};
         
         // Set light parameters.
         gl.glLightfv(GL2.GL_LIGHT1, GL2.GL_POSITION, lightPos, 0);
@@ -110,7 +124,9 @@ public class Renderer implements GLEventListener
         	
         	gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE); 
         	
-        	float[] rgbae = {1f, 1f, 1f};
+        	Color c = edgeColors.get(i);
+        	
+        	float[] rgbae = {(float) (c.getRed()/255.0), (float) (c.getGreen()/255.0), (float) (c.getBlue()/255.0)};
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, rgbae, 0);
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, rgbae, 0);
 	        gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 0.5f);
@@ -127,8 +143,10 @@ public class Renderer implements GLEventListener
             //Imposta la modalità di disegno
         	gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL); 
         	
+        	c = faceColors.get(i);
+        	
         	//Imposta i parametri del materiale di cu è composta la faccia
-        	float[] rgbaf = {1f, 0f, 0f};
+        	float[] rgbaf = {(float) (c.getRed()/255.0), (float) (c.getGreen()/255.0), (float) (c.getBlue()/255.0)};
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, rgbaf, 0);
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, rgbaf, 0);
 	        gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 0.5f);
@@ -145,7 +163,7 @@ public class Renderer implements GLEventListener
             gl.glEnd();
         }
         
-        float[] rgbap = {0.3f, 0.3f, 0.3f};
+        /*float[] rgbap = {1f, 0f, 0f, 0.5f};
         gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, rgbap, 0);
         gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, rgbap, 0);
         gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 0.5f);
@@ -155,7 +173,7 @@ public class Renderer implements GLEventListener
         gl.glVertex3f(-1, 1, 0);	
         gl.glVertex3f(1, 1, 0);
         gl.glVertex3f(1, -1, 0);
-        gl.glEnd();
+        gl.glEnd();*/
     }
  
     public void display ()
@@ -260,5 +278,49 @@ public class Renderer implements GLEventListener
 	public double getDist()
 	{
 		return dPos;
+	}
+
+	@Override
+	public void resetScene() {
+		clear();
+		
+	}
+
+	@Override
+	public void drawTriangle(GeometryPoint p1, GeometryPoint p2,
+			GeometryPoint p3, Color c) {
+		
+		Point3D[] pts = {
+				new Point3D(p1.getX(), p1.getY(), p1.getZ()),
+				new Point3D(p2.getX(), p2.getY(), p2.getZ()),
+				new Point3D(p3.getX(), p3.getY(), p3.getZ())
+		};
+		
+		AddFace(pts, c, c);
+		
+	}
+
+	@Override
+	public void drawLine(GeometryPoint p1, GeometryPoint p2, Color c) {
+		
+		Point3D[] pts = {
+				new Point3D(p1.getX(), p1.getY(), p1.getZ()),
+				new Point3D(p1.getX(), p1.getY(), p1.getZ()),
+				new Point3D(p2.getX(), p2.getY(), p2.getZ())
+		};
+		
+		AddFace(pts, c, c);
+		
+	}
+
+	@Override
+	public void drawPoint(GeometryPoint p, Color c) {
+		Point3D[] pts = {
+				new Point3D(p.getX() , p.getY(), p.getZ()),
+				new Point3D(p.getX() + 0.005, p.getY(), p.getZ()),
+				new Point3D(p.getX(), p.getY() - 0.005, p.getZ())
+		};
+		
+		AddFace(pts, c, c);
 	}
 }

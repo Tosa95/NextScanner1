@@ -4,6 +4,10 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.swing.*;
 
+import tosatto.geometry.GeometryLine;
+import tosatto.geometry.GeometryPlane;
+import tosatto.geometry.GeometryPoint;
+import tosatto.geometry.GeometrySpace;
 import tosatto.nextscanner.calc.threedim.PositionCalculator;
 import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.imaging.ImageFiltering;
@@ -15,6 +19,7 @@ import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.ImagePanel;
 import tosatto.nextscanner.ui.SettingsFrame;
 import tosatto.nextscanner.ui.ogl.MyJoglCanvas;
+import tosatto.nextscanner.ui.ogl.Renderer;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -41,7 +46,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	
 	private JPanel pImgs, pBtns, pSouth;
 	
-	private ImagePanel pWCam, pCfrnt, pV3D;
+	private ImagePanel pWCam, pCfrnt, pV3D, pGV;
 	
 	private PositionCalculator pc;
 	
@@ -51,7 +56,11 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	
 	private ScanningThread MT;
 	
-	protected MyJoglCanvas View3D;
+	private GeometrySpace gSpace;
+	
+	private Renderer gRenderer;
+	
+	protected MyJoglCanvas View3D, GeometryView;
 	
 	protected volatile JProgressBar ScanningProgress;
 	
@@ -92,6 +101,12 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		pV3D.setBackground(Color.white);
 		pV3D.setImage(ImagingUtilities.getImageFromResource("Background.png"));
 		
+		pGV = new ImagePanel(ImagePanel.RESIZE_IMAGE);
+		pGV.setLayout(new BorderLayout());
+		pGV.setPreferredSize(new Dimension(800, 800));
+		pGV.setBackground(Color.white);
+		pGV.setImage(ImagingUtilities.getImageFromResource("Background.png"));
+		
 		// setup OpenGL Version 2
     	GLProfile profile = GLProfile.get(GLProfile.GL2);
     	GLCapabilities capabilities = new GLCapabilities(profile);
@@ -101,10 +116,12 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		pWCam.add(pImg);
 		pCfrnt.add(pRis);
 		pV3D.add(View3D, BorderLayout.CENTER);
+		pGV.add(GeometryView, BorderLayout.CENTER);
 		
 		JTPane.addTab("Webcam View", pWCam);
 		JTPane.addTab("Linea Laser", pCfrnt);
 		JTPane.addTab("Vista 3D", pV3D);
+		JTPane.addTab("Geometria", pGV);
 		
 		JTPane.setBackground(Color.white);
 	}
@@ -115,6 +132,12 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		
 		//HardwareManager.get();
 		
+		gRenderer = new Renderer();
+		gSpace = new GeometrySpace(2, gRenderer);
+		
+    	GLProfile profile = GLProfile.get(GLProfile.GL2);
+    	GLCapabilities capabilities = new GLCapabilities(profile);
+		GeometryView = new MyJoglCanvas(640, 480, capabilities, gRenderer);
 		
 		MT = new ScanningThread(this);
 		
@@ -175,6 +198,22 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		
 		interfaceSetup();
 	    
+		gSpace.addObject("r", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(1, 1, 1)), Color.white);
+		
+		gSpace.addObject("x", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(1, 0, 0)), Color.red);
+		gSpace.addObject("y", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 1, 0)), Color.green);
+		gSpace.addObject("z", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 0, 1)), Color.blue);
+		
+		GeometryPlane pl = new GeometryPlane(0, 0, 1, 0);
+		gSpace.addObject("z=0", pl, new Color (80, 80, 80));
+		
+		gSpace.addObject("Cam", new GeometryPoint (0.3, 0.2, 0.05), Color.white, false);
+		gSpace.addObject("C", new GeometryPoint (0, 0, 0), Color.white, false);
+		
+		gSpace.addObject("Ray", new GeometryLine((GeometryPoint)gSpace.get("C"), (GeometryPoint)gSpace.get("Cam")), Color.cyan);
+		
+		gSpace.addObject("Laser", new GeometryPlane(0, 1, 0, 0), Color.red);
+		
 		enableScanning();
 	}
 

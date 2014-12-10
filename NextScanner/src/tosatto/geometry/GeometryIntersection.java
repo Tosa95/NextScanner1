@@ -47,4 +47,47 @@ public class GeometryIntersection {
 		}
 	}
 
+	public static GeometryObject intersect (GeometryPlane p1, GeometryPlane p2, GeometryPlane p3)
+	{
+		double [][] mtrx =
+			{
+				p1.getCoefficients(),
+				p2.getCoefficients(),
+				p3.getCoefficients()
+			};
+		
+		Matrix AB = new Basic2DMatrix(mtrx);
+		Matrix A = GeometryUtils.removeColumn(AB, 3);
+		
+		int rankAB = AB.rank();
+		int rankA = A.rank();
+		
+		if (rankAB == 3 && rankA == 3)
+		{
+			double [] b = {mtrx[0][3], mtrx[1][3], mtrx[2][3]};
+			
+			Vector B = new BasicVector(b);
+			
+			LinearSystemSolver solver = A.withSolver(LinearAlgebra.FORWARD_BACK_SUBSTITUTION);
+			
+			Vector res = solver.solve(B);
+			
+			return new GeometryPoint(res.get(0), res.get(1), res.get(2));
+		}
+		else if (rankA != rankAB)
+		{
+			return null;
+		}
+		else if (rankA == 2)
+		{
+			return new GeometryLine(p1, p2);
+		}
+		else if (rankA == 1)
+		{
+			return p1;
+		}
+		
+		throw new IllegalArgumentException("Trying to intersect something that isn't a plane");
+	}
+	
 }

@@ -85,6 +85,33 @@ public class GeometryLine extends GeometryObject {
 		return planes;
 	}
 	
+	public GeometryPoint getPoint (double t)
+	{
+		GeometryPlane pl = new GeometryPlane(1, 0, 0, t);
+		GeometryPoint res;
+		
+		if (GeometryPosition.getPosition(pl, this).isIncident())
+		{
+			return (GeometryPoint) GeometryIntersection.intersect(pl, this);
+		}
+		
+		pl = new GeometryPlane(0, 1, 0, t);
+		
+		if (GeometryPosition.getPosition(pl, this).isIncident())
+		{
+			return (GeometryPoint) GeometryIntersection.intersect(pl, this);
+		}
+		
+		pl = new GeometryPlane(0, 0, 1, t);
+		
+		if (GeometryPosition.getPosition(pl, this).isIncident())
+		{
+			return (GeometryPoint) GeometryIntersection.intersect(pl, this);
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public String toString ()
 	{

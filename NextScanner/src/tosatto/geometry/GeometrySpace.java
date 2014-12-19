@@ -132,7 +132,11 @@ public class GeometrySpace {
 			if (GeometryPosition.getPosition(pts[i], pt).isCoincident())
 				return false;
 		}
-		return true;
+		
+		if (pt.getX()>=-semisize && pt.getX()<=semisize && pt.getY()>=-semisize && pt.getY()<=semisize && pt.getZ()>=-semisize && pt.getZ()<=semisize)
+			return true;
+		
+		return false;
 	}
 	
 	public void addObject (String n, GeometryObject o, Color c)

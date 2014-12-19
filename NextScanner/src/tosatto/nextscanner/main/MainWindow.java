@@ -5,9 +5,11 @@ import javax.media.opengl.GLProfile;
 import javax.swing.*;
 
 import tosatto.geometry.GeometryLine;
+import tosatto.geometry.GeometryOrtogonal;
 import tosatto.geometry.GeometryPlane;
 import tosatto.geometry.GeometryPoint;
 import tosatto.geometry.GeometrySpace;
+import tosatto.geometry.GeometryTransformation;
 import tosatto.nextscanner.calc.threedim.PositionCalculator;
 import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.imaging.ImageFiltering;
@@ -198,21 +200,20 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		
 		interfaceSetup();
 	    
-		gSpace.addObject("r", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(1, 1, 1)), Color.white);
+		GeometryLine x = new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(1, 0, 0));
+		GeometryLine y = new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 1, 0));
+		GeometryLine z = new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 0, 1));		
 		
-		gSpace.addObject("x", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(1, 0, 0)), Color.red);
-		gSpace.addObject("y", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 1, 0)), Color.green);
-		gSpace.addObject("z", new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 0, 1)), Color.blue);
+		gSpace.addObject("x", x, Color.red, true);
+		gSpace.addObject("y", y, Color.green, true);
+		gSpace.addObject("z", z, Color.blue, true);
 		
-		GeometryPlane pl = new GeometryPlane(0, 0, 1, 0);
-		gSpace.addObject("z=0", pl, new Color (80, 80, 80));
+		GeometryPoint p1 = new GeometryPoint(0.1, 0, 0);
 		
-		gSpace.addObject("Cam", new GeometryPoint (0.3, 0.2, 0.05), Color.white, false);
-		gSpace.addObject("C", new GeometryPoint (0, 0, 0), Color.white, false);
+		GeometryPoint p2 = GeometryTransformation.rotate(p1, z, Math.PI/4);
 		
-		gSpace.addObject("Ray", new GeometryLine((GeometryPoint)gSpace.get("C"), (GeometryPoint)gSpace.get("Cam")), Color.cyan);
-		
-		gSpace.addObject("Laser", new GeometryPlane(0, 1, 0, 0), Color.red);
+		gSpace.addObject("p1", p1, Color.yellow, true);
+		gSpace.addObject("p2", p2, Color.pink, true);
 		
 		enableScanning();
 	}

@@ -85,10 +85,12 @@ public class Renderer implements GLEventListener, IGeometryRenderer
         
      // Global settings.
         gl.glEnable(GL2.GL_DEPTH_TEST);
+        gl.glBlendFunc (GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);//ERRORE
+        gl.glEnable (GL2.GL_BLEND);
         //gl.glDepthFunc(GL2.GL_LEQUAL);
         gl.glShadeModel(GL2.GL_SMOOTH);
         gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
-        gl.glClearColor(0f, 0f, 0f, 1f);
+        gl.glClearColor(0f, 0f, 0f, 0f);
         
      // Prepare light parameters.
         float SHINE_ALL_DIRECTIONS = 1;
@@ -106,12 +108,8 @@ public class Renderer implements GLEventListener, IGeometryRenderer
         // Enable lighting in GL.
         gl.glEnable(GL2.GL_LIGHT1);
         gl.glEnable(GL2.GL_LIGHTING);
-
-        // Set material properties.
-        float[] rgba = {1f, 0f, 0f};
-        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, rgba, 0);
-        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, rgba, 0);
-        gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 0.5f);
+        
+        //gl.glEnable(GL2.GL_COLOR_MATERIAL);
         
         for (int i = 0; i < faces.size(); i++)
         {
@@ -126,19 +124,18 @@ public class Renderer implements GLEventListener, IGeometryRenderer
         	
         	Color c = edgeColors.get(i);
         	
-        	float[] rgbae = {(float) (c.getRed()/255.0), (float) (c.getGreen()/255.0), (float) (c.getBlue()/255.0)};
+        	float[] rgbae = {(float) (c.getRed()/255.0), (float) (c.getGreen()/255.0), (float) (c.getBlue()/255.0), (float) (c.getAlpha()/255.0)};
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, rgbae, 0);
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, rgbae, 0);
-	        gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 0.5f);
+	        gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 1f);
         	
+	        gl.glColor4f(rgbae[0], rgbae[1],rgbae[2], rgbae[3]);
+	        
             gl.glBegin(GL2.GL_TRIANGLES);		
             gl.glVertex3f((float)p1.getX()*3,(float)p1.getY()*3,(float)p1.getZ()*3);	
             gl.glVertex3f((float)p2.getX()*3,(float)p2.getY()*3,(float)p2.getZ()*3);	
             gl.glVertex3f((float)p3.getX()*3,(float)p3.getY()*3,(float)p3.getZ()*3);	
             gl.glEnd();
-            
-            //Imposta il colore
-            gl.glColor3f(0.5f, 0.5f, 0.5f);
         	
             //Imposta la modalità di disegno
         	gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL); 
@@ -146,11 +143,13 @@ public class Renderer implements GLEventListener, IGeometryRenderer
         	c = faceColors.get(i);
         	
         	//Imposta i parametri del materiale di cu è composta la faccia
-        	float[] rgbaf = {(float) (c.getRed()/255.0), (float) (c.getGreen()/255.0), (float) (c.getBlue()/255.0)};
+        	float[] rgbaf = {(float) (c.getRed()/255.0), (float) (c.getGreen()/255.0), (float) (c.getBlue()/255.0), (float) (c.getAlpha()/255.0)};
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, rgbaf, 0);
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_SPECULAR, rgbaf, 0);
-	        gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 0.5f);
+	        gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL2.GL_SHININESS, 1f);
         	
+	        gl.glColor4f(rgbaf[0], rgbaf[1],rgbaf[2], rgbaf[3]);
+	        
 	        //Inizia a disegnare un triangolo
             gl.glBegin(GL2.GL_TRIANGLES);
             
@@ -317,8 +316,8 @@ public class Renderer implements GLEventListener, IGeometryRenderer
 	public void drawPoint(GeometryPoint p, Color c) {
 		Point3D[] pts = {
 				new Point3D(p.getX() , p.getY(), p.getZ()),
-				new Point3D(p.getX() + 0.005, p.getY(), p.getZ()),
-				new Point3D(p.getX(), p.getY() - 0.005, p.getZ())
+				new Point3D(p.getX() + 0.02, p.getY(), p.getZ()),
+				new Point3D(p.getX(), p.getY() - 0.02, p.getZ())
 		};
 		
 		AddFace(pts, c, c);

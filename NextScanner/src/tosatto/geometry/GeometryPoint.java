@@ -48,4 +48,9 @@ public class GeometryPoint extends GeometryObject {
 	{
 		return coordinates[2];
 	}
+	
+	public static GeometryPoint getCenter ()
+	{
+		return new GeometryPoint (0, 0, 0);
+	}
 }

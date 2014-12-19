@@ -153,6 +153,41 @@ public class GeometryPlane extends GeometryObject {
 		return coefficients[3];
 	}
 	
+	public GeometryPoint getPoint ()
+	{
+		GeometryPoint result = null;
+		
+		GeometryPoint c = GeometryPoint.getCenter();
+		GeometryPoint p = new GeometryPoint(1,0,0);
+		
+		GeometryLine l = new GeometryLine(c, p);
+		
+		if (GeometryPosition.getPosition(this, l).isIncident())
+		{
+			return (GeometryPoint) GeometryIntersection.intersect(this, l);
+		}
+
+		p = new GeometryPoint(0,1,0);
+		
+		l = new GeometryLine(c, p);
+		
+		if (GeometryPosition.getPosition(this, l).isIncident())
+		{
+			return (GeometryPoint) GeometryIntersection.intersect(this, l);
+		}
+		
+		p = new GeometryPoint(0,0,1);
+		
+		l = new GeometryLine(c, p);
+		
+		if (GeometryPosition.getPosition(this, l).isIncident())
+		{
+			return (GeometryPoint) GeometryIntersection.intersect(this, l);
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public String toString()
 	{

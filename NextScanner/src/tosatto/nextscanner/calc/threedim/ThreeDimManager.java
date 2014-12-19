@@ -15,7 +15,7 @@ public class ThreeDimManager {
 	
 	private Point3DPool P3DPool;
 	
-	private PositionCalculator pc;
+	private ICalculator pc;
 	
 	private Renderer r;
 	
@@ -63,21 +63,8 @@ public class ThreeDimManager {
 	
 	
 	private Point3D getPoint (int val, int height)
-	{
-		//Calcola x
-		//Inverte val in quanto l'origine delle immagini è fissata in alto a sx,
-		//ma a noi serve partire da in basso a dx, per avere gli scostamenti positivi corretti
-		double x = pc.calcXCoord(w-val); 
-		
-		//y sempre uguale a 0
-		double y = 0;
-		
-		//Calcola z
-		//Inverte height in quanto l'origine delle immagini è fissata in alto a sx,
-		//ma a noi serve partire da in basso a dx, per avere le coordinate z positive
-		double z = pc.calcZCoord(h-height, val);
-		
-		return new Point3D(x, y, z);
+	{	
+		return pc.calcPosition(height, val) ;
 	}
 	
 	//Limita il punto come descritto in §2.6.1
@@ -170,7 +157,7 @@ public class ThreeDimManager {
 	
 	public double getZ (Point p)
 	{
-		double z = pc.calcZCoord((int)(h-p.getY()), (int)(p.getX()));
+		double z = pc.calcPosition((int)p.getY(), (int)p.getX()).getZ();
 		
 		return z;
 	}

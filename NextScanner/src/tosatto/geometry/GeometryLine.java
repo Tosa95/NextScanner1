@@ -22,6 +22,32 @@ public class GeometryLine extends GeometryObject {
 		}
 	}
 	
+	public GeometryLine (GeometryPoint p1, double[] directorParams)
+	{
+		fromDirParams(p1, directorParams);
+	}
+	
+	private void fromDirParams (GeometryPoint p1, double[] directorParams)
+	{
+		double l = directorParams[0], m = directorParams[1], n = directorParams[2];
+		
+		if (l != 0)
+		{
+			planes[0] = new GeometryPlane(m/l, -1, 0, p1.getY() - (m/l) * p1.getX());
+			planes[1] = new GeometryPlane(n/l, 0, -1, p1.getZ() - (n/l) * p1.getX());
+		}
+		else if (m != 0)
+		{
+			planes[0] = new GeometryPlane(-1, l/m, 0, p1.getX() - (l/m) * p1.getY());
+			planes[1] = new GeometryPlane(0, n/m, -1, p1.getZ() - (n/m) * p1.getY());
+		}
+		else if (n != 0)
+		{
+			planes[0] = new GeometryPlane(-1, 0, l/n, p1.getX() - (l/n) * p1.getZ());
+			planes[1] = new GeometryPlane(0, -1, m/n, p1.getY() - (m/n) * p1.getZ());
+		}
+	}
+	
 	public GeometryLine (GeometryPoint p1, GeometryPoint p2)
 	{
 		if (!GeometryPosition.getPosition(p1, p2).isCoincident())
@@ -30,23 +56,7 @@ public class GeometryLine extends GeometryObject {
 			
 			double [] pdr = {p2.getX() - p1.getX(), p2.getY() - p1.getY(), p2.getZ() - p1.getZ()};
 			
-			double l = pdr[0], m = pdr[1], n = pdr[2];
-			
-			if (l != 0)
-			{
-				planes[0] = new GeometryPlane(m/l, -1, 0, p1.getY() - (m/l) * p1.getX());
-				planes[1] = new GeometryPlane(n/l, 0, -1, p1.getZ() - (n/l) * p1.getX());
-			}
-			else if (m != 0)
-			{
-				planes[0] = new GeometryPlane(-1, l/m, 0, p1.getX() - (l/m) * p1.getY());
-				planes[1] = new GeometryPlane(0, n/m, -1, p1.getZ() - (n/m) * p1.getY());
-			}
-			else if (n != 0)
-			{
-				planes[0] = new GeometryPlane(-1, 0, l/n, p1.getX() - (l/n) * p1.getZ());
-				planes[1] = new GeometryPlane(0, -1, m/n, p1.getY() - (m/n) * p1.getZ());
-			}
+			fromDirParams(p1, pdr);
 		}
 		else
 		{

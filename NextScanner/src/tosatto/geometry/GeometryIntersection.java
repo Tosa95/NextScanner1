@@ -19,6 +19,10 @@ public class GeometryIntersection {
 				l.getPlanes()[1].getCoefficients()
 			};
 		
+		mtrx[0][3] = -mtrx[0][3];
+		mtrx[1][3] = -mtrx[1][3];
+		mtrx[2][3] = -mtrx[2][3];
+		
 		Matrix AB = new Basic2DMatrix(mtrx);
 		Matrix A = GeometryUtils.removeColumn(AB, 3);
 		
@@ -55,6 +59,10 @@ public class GeometryIntersection {
 				p2.getCoefficients(),
 				p3.getCoefficients()
 			};
+		
+		mtrx[0][3] = -mtrx[0][3];
+		mtrx[1][3] = -mtrx[1][3];
+		mtrx[2][3] = -mtrx[2][3];
 		
 		Matrix AB = new Basic2DMatrix(mtrx);
 		Matrix A = GeometryUtils.removeColumn(AB, 3);

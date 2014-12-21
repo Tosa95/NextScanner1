@@ -10,6 +10,7 @@ import tosatto.geometry.GeometryPlane;
 import tosatto.geometry.GeometryPoint;
 import tosatto.geometry.GeometrySpace;
 import tosatto.geometry.GeometryTransformation;
+import tosatto.nextscanner.calc.threedim.GeometryCalculator;
 import tosatto.nextscanner.calc.threedim.PositionCalculator;
 import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.imaging.ImageFiltering;
@@ -200,20 +201,9 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 		
 		interfaceSetup();
 	    
-		GeometryLine x = new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(1, 0, 0));
-		GeometryLine y = new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 1, 0));
-		GeometryLine z = new GeometryLine (new GeometryPoint(0,0,0), new GeometryPoint(0, 0, 1));		
+		/*Geometry*/
 		
-		gSpace.addObject("x", x, Color.red, true);
-		gSpace.addObject("y", y, Color.green, true);
-		gSpace.addObject("z", z, Color.blue, true);
-		
-		GeometryPoint p1 = new GeometryPoint(0.1, 0, 0);
-		
-		GeometryPoint p2 = GeometryTransformation.rotate(p1, z, Math.PI/4);
-		
-		gSpace.addObject("p1", p1, Color.yellow, true);
-		gSpace.addObject("p2", p2, Color.pink, true);
+		new GeometryCalculator(Math.PI/4, 320, 240, new GeometryPoint(0.3, 0.1, 0.05), gSpace);
 		
 		enableScanning();
 	}

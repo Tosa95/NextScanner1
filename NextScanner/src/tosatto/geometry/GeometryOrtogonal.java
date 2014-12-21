@@ -12,4 +12,11 @@ public class GeometryOrtogonal {
 		
 		return new GeometryPlane (coeff);
 	}
+	
+	public static GeometryLine getOrtogonalLine (GeometryPlane pl, GeometryPoint p)
+	{
+		double[] pdl = {pl.getA(), pl.getB(), pl.getC()};
+		
+		return new GeometryLine(p, pdl);
+	}
 }

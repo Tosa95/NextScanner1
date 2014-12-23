@@ -59,7 +59,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	
 	private ScanningThread MT;
 	
-	private GeometrySpace gSpace;
+	public static GeometrySpace gSpace;
 	
 	private Renderer gRenderer;
 	
@@ -203,7 +203,9 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	    
 		/*Geometry*/
 		
-		new GeometryCalculator(Math.PI/4, 320, 240, new GeometryPoint(0.3, 0.1, 0.05), gSpace);
+		GeometryCalculator gc = new GeometryCalculator(Math.PI/4, 320, 240, new GeometryPoint(0.3, 0.1, 0.05), gSpace);
+		
+		gc.calcPosition(80, 130);
 		
 		enableScanning();
 	}

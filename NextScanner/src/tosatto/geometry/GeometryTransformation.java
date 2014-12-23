@@ -83,4 +83,13 @@ public class GeometryTransformation {
 		return null;
 	}
 	
+	public static GeometryPlane rotate (GeometryPlane pl, GeometryLine a, double angle)
+	{
+		GeometryPoint p = pl.getPoint();
+		
+		GeometryPoint pR = rotate(p, a, angle);
+		
+		return new GeometryPlane(pR, a);
+	}
+	
 }

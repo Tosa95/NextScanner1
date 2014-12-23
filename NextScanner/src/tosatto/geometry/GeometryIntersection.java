@@ -14,9 +14,9 @@ public class GeometryIntersection {
 	{
 		double [][] mtrx =
 			{
-				p.getCoefficients(),
-				l.getPlanes()[0].getCoefficients(),
-				l.getPlanes()[1].getCoefficients()
+				p.getCoefficients().clone(),
+				l.getPlanes()[0].getCoefficients().clone(),
+				l.getPlanes()[1].getCoefficients().clone()
 			};
 		
 		mtrx[0][3] = -mtrx[0][3];
@@ -55,9 +55,9 @@ public class GeometryIntersection {
 	{
 		double [][] mtrx =
 			{
-				p1.getCoefficients(),
-				p2.getCoefficients(),
-				p3.getCoefficients()
+				p1.getCoefficients().clone(),
+				p2.getCoefficients().clone(),
+				p3.getCoefficients().clone()
 			};
 		
 		mtrx[0][3] = -mtrx[0][3];

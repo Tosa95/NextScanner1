@@ -18,9 +18,9 @@ public class Renderer implements GLEventListener, IGeometryRenderer
 {
     private GLU glu = new GLU();
  
-    private List<Point3D []> faces;
-    private List<Color> faceColors;
-    private List<Color> edgeColors;
+    private volatile List<Point3D []> faces;
+    private volatile List<Color> faceColors;
+    private volatile List<Color> edgeColors;
     
     private GLAutoDrawable glAD = null;
     
@@ -56,7 +56,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
     	AddFace (points, new Color(107, 179, 253, 255), Color.white);
     }
     
-    public void clear()
+    public  synchronized void clear()
     {
     	faces = new ArrayList<Point3D[]>();
     	faceColors = new ArrayList<Color>();
@@ -65,7 +65,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
     	reset = true;
     }
     
-    public void display(GLAutoDrawable gLDrawable) 
+    public synchronized void display(GLAutoDrawable gLDrawable) 
     {
     	
     	glAD = gLDrawable;
@@ -111,18 +111,22 @@ public class Renderer implements GLEventListener, IGeometryRenderer
         
         //gl.glEnable(GL2.GL_COLOR_MATERIAL);
         
-        for (int i = 0; i < faces.size(); i++)
+        List<Point3D []> facesClone = (List<Point3D[]>) ((ArrayList<Point3D[]>)faces).clone();
+        List<Color> faceColorsClone = (List<Color>) ((ArrayList<Color>)faceColors).clone();
+        List<Color> edgeColorsClone = (List<Color>) ((ArrayList<Color>)edgeColors).clone();
+        
+        for (int i = 0; i < facesClone.size(); i++)
         {
-        	Point3D p1 = faces.get(i)[0];
-        	Point3D p2 = faces.get(i)[1];
-        	Point3D p3 = faces.get(i)[2];
+        	Point3D p1 = facesClone.get(i)[0];
+        	Point3D p2 = facesClone.get(i)[1];
+        	Point3D p3 = facesClone.get(i)[2];
         	
         	
         	gl.glColor3f(0.1f, 0.1f, 0.1f);
         	
         	gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE); 
         	
-        	Color c = edgeColors.get(i);
+        	Color c = edgeColorsClone.get(i);
         	
         	float[] rgbae = {(float) (c.getRed()/255.0), (float) (c.getGreen()/255.0), (float) (c.getBlue()/255.0), (float) (c.getAlpha()/255.0)};
 	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL2.GL_AMBIENT, rgbae, 0);
@@ -140,7 +144,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
             //Imposta la modalità di disegno
         	gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL); 
         	
-        	c = faceColors.get(i);
+        	c = faceColorsClone.get(i);
         	
         	//Imposta i parametri del materiale di cu è composta la faccia
         	float[] rgbaf = {(float) (c.getRed()/255.0), (float) (c.getGreen()/255.0), (float) (c.getBlue()/255.0), (float) (c.getAlpha()/255.0)};
@@ -286,7 +290,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
 	}
 
 	@Override
-	public void drawTriangle(GeometryPoint p1, GeometryPoint p2,
+	public synchronized void drawTriangle(GeometryPoint p1, GeometryPoint p2,
 			GeometryPoint p3, Color c) {
 		
 		Point3D[] pts = {
@@ -300,7 +304,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
 	}
 
 	@Override
-	public void drawLine(GeometryPoint p1, GeometryPoint p2, Color c) {
+	public synchronized void drawLine(GeometryPoint p1, GeometryPoint p2, Color c) {
 		
 		Point3D[] pts = {
 				new Point3D(p1.getX(), p1.getY(), p1.getZ()),
@@ -313,7 +317,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
 	}
 
 	@Override
-	public void drawPoint(GeometryPoint p, Color c) {
+	public synchronized void drawPoint(GeometryPoint p, Color c) {
 		Point3D[] pts = {
 				new Point3D(p.getX() , p.getY(), p.getZ()),
 				new Point3D(p.getX() + 0.02, p.getY(), p.getZ()),

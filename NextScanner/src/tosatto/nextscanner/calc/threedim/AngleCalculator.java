@@ -19,14 +19,18 @@ public class AngleCalculator {
 	
 	public double getVerticalAngle (int M)
 	{
-		M = Math.abs((int)(M - h/2));
+		//M = Math.abs((int)(M - h/2));
+		
+		M = (int)(M - h/2);
 		
 		return (M*fovv)/h;
 	}
 	
 	public double getHorizontalAngle (int N)
 	{
-		N = Math.abs((int)(N - (w/2)));
+		//N = Math.abs((int)(N - (w/2)));
+		
+		N = (int)(N - (w/2));
 		
 		return ((fovh/2)/(w/2))*N;
 	}

@@ -5,7 +5,7 @@ import org.la4j.matrix.dense.Basic2DMatrix;
 import org.la4j.vector.dense.BasicVector;
 
 public class GeometryLine extends GeometryObject {
-	private GeometryPlane[] planes;
+	private volatile GeometryPlane[] planes;
 	
 	public GeometryLine (GeometryPlane p1, GeometryPlane p2)
 	{
@@ -24,6 +24,7 @@ public class GeometryLine extends GeometryObject {
 	
 	public GeometryLine (GeometryPoint p1, double[] directorParams)
 	{
+		planes = new GeometryPlane[2];
 		fromDirParams(p1, directorParams);
 	}
 	

@@ -16,8 +16,10 @@ import tosatto.geometry.GeometryUtils;
 import tosatto.nextscanner.main.notifier.EventCategory;
 import tosatto.nextscanner.main.notifier.Notifier;
 import tosatto.nextscanner.main.settings.SettingsManager;
+import tosatto.nextscanner.ui.ogl.ISceneCreator;
+import tosatto.nextscanner.ui.ogl.Renderer;
 
-public class GeometryCalculator implements ICalculator {
+public class GeometryCalculator implements ICalculator, ISceneCreator {
 
 	AngleCalculator ac;
 	
@@ -108,15 +110,6 @@ public class GeometryCalculator implements ICalculator {
 				}
 			}
 		}
-		
-		if (gSpace != null)
-		{
-			//gSpace.addObject("imgPlane", imgPlane, Color.blue);
-			//gSpace.addObject("a", topLeft, Color.red);
-			//gSpace.addObject("b", bottomLeft, Color.red);
-			//gSpace.addObject("c", topRight, Color.red);
-			gSpace.drawScene();
-		}
 	}
 	
 	private void initGeometryObjects ()
@@ -179,13 +172,15 @@ public class GeometryCalculator implements ICalculator {
 		
 		GeometryLine actRay = getRay(M, N);
 		
+		GeometryPoint res = (GeometryPoint)GeometryIntersection.intersect(lPlane, actRay);
+		
 		if (((int)SettingsManager.get().getValue("GEOMETRY_SLOW"))!=0)
 		{
 			GeometryPoint act = imgPts[M][N];
 			
 			gSpace.addObject("actRay", actRay, Color.green);
 			gSpace.addObject("actPt", imgPts[M][N], Color.green);
-			gSpace.drawScene();
+			gSpace.addObject("intersection", res, Color.blue);
 			
 			try {
 				Thread.sleep(100);
@@ -195,9 +190,16 @@ public class GeometryCalculator implements ICalculator {
 			}
 		}
 		
-		GeometryPoint res = (GeometryPoint)GeometryIntersection.intersect(lPlane, actRay);
+		
 		
 		return new Point3D(res.getX(), res.getY(), res.getZ());
+	}
+
+	@Override
+	public void addObjectsToScene(Renderer r) {
+
+		gSpace.drawScene();
+		
 	}
 
 }

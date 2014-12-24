@@ -36,6 +36,8 @@ public class ThreeDimManager {
 		
 		pc = new GeometryCalculator(CAM_FOV, w, h, CAM_POS, MainWindow.gSpace);
 		
+		MainWindow.gRenderer.addSceneCreator((GeometryCalculator)pc);
+		
 		actPos = 0;
 		actAngle = 0;
 		

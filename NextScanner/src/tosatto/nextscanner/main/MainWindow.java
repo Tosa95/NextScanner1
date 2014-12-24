@@ -12,6 +12,7 @@ import tosatto.geometry.GeometrySpace;
 import tosatto.geometry.GeometryTransformation;
 import tosatto.nextscanner.calc.threedim.GeometryCalculator;
 import tosatto.nextscanner.calc.threedim.PositionCalculator;
+import tosatto.nextscanner.calc.threedim.ThreeDimManager;
 import tosatto.nextscanner.hardwarecom.HardwareManager;
 import tosatto.nextscanner.imaging.ImageFiltering;
 import tosatto.nextscanner.imaging.ImagingUtilities;
@@ -61,7 +62,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	
 	public static GeometrySpace gSpace;
 	
-	private Renderer gRenderer;
+	public static Renderer gRenderer;
 	
 	protected MyJoglCanvas View3D, GeometryView;
 	
@@ -198,6 +199,7 @@ public class MainWindow extends JFrame implements ActionListener, WindowListener
 	public MainWindow ()
 	{	
 		Notifier.get().addListener(this, new EventCategory("webcam:frame"));
+		
 		
 		interfaceSetup();
 	    

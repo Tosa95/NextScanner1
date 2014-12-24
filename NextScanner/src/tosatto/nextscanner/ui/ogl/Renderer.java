@@ -18,6 +18,8 @@ public class Renderer implements GLEventListener, IGeometryRenderer
 {
     private GLU glu = new GLU();
  
+    private volatile List<ISceneCreator> sc = new ArrayList<ISceneCreator>();
+    
     private volatile List<Point3D []> faces;
     private volatile List<Color> faceColors;
     private volatile List<Color> edgeColors;
@@ -34,6 +36,19 @@ public class Renderer implements GLEventListener, IGeometryRenderer
     private Point3D cam = new Point3D(pos, 0, 0);
     
     private boolean reset = true;
+
+    public void addSceneCreator (ISceneCreator iSC)
+    {
+    	sc.add(iSC);
+    }
+    
+    private void createScene ()
+    {
+    	for (ISceneCreator iSC: sc)
+    	{
+    		iSC.addObjectsToScene(this);
+    	}
+    }
     
     public Renderer ()
     {
@@ -67,6 +82,8 @@ public class Renderer implements GLEventListener, IGeometryRenderer
     
     public synchronized void display(GLAutoDrawable gLDrawable) 
     {
+    	
+
     	
     	glAD = gLDrawable;
         GL2 gl = gLDrawable.getGL().getGL2();
@@ -110,6 +127,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
         gl.glEnable(GL2.GL_LIGHTING);
         
         //gl.glEnable(GL2.GL_COLOR_MATERIAL);
+        createScene();
         
         List<Point3D []> facesClone = (List<Point3D[]>) ((ArrayList<Point3D[]>)faces).clone();
         List<Color> faceColorsClone = (List<Color>) ((ArrayList<Color>)faceColors).clone();
@@ -285,6 +303,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
 
 	@Override
 	public void resetScene() {
+		
 		clear();
 		
 	}
@@ -318,6 +337,7 @@ public class Renderer implements GLEventListener, IGeometryRenderer
 
 	@Override
 	public synchronized void drawPoint(GeometryPoint p, Color c) {
+		
 		Point3D[] pts = {
 				new Point3D(p.getX() , p.getY(), p.getZ()),
 				new Point3D(p.getX() + 0.02, p.getY(), p.getZ()),

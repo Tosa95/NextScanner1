@@ -49,13 +49,15 @@ public class GeometrySpace {
 	{
 		if (renderer != null)
 		{
+			Map<String, GeometryObjectListEntry> oListC = (Map<String, GeometryObjectListEntry>) (( HashMap<String, GeometryObjectListEntry>)oList).clone();
+			
 			renderer.resetScene();
 			
-			Set<String> keySet = oList.keySet();
+			Set<String> keySet = oListC.keySet();
 			
 			for (String s: keySet)
 			{
-				GeometryObjectListEntry act = oList.get(s);
+				GeometryObjectListEntry act = oListC.get(s);
 				
 				if (act.getVisible())
 				{
@@ -141,6 +143,7 @@ public class GeometrySpace {
 	
 	public void addObject (String n, GeometryObject o, Color c)
 	{
+		
 		oList.put(n, new GeometryObjectListEntry(c, o));
 		
 		//drawScene();
@@ -148,6 +151,7 @@ public class GeometrySpace {
 	
 	public void addObject (String n, GeometryObject o, Color c, boolean visible)
 	{
+		
 		oList.put(n, new GeometryObjectListEntry(c, o, visible));
 		
 		//drawScene();
@@ -155,19 +159,21 @@ public class GeometrySpace {
 	
 	public void removeObject (String n)
 	{
+		
 		oList.remove(n);
 		
 		//drawScene();
 	}
 	
 	public void updateObject (String n, GeometryObject newO, Color newC)
-	{
+	{	
 		removeObject(n);
 		addObject (n, newO, newC);
 	}
 	
 	public void setVisible (String n, boolean visible)
 	{
+		
 		oList.get(n).setVisible(visible);
 	}
 	

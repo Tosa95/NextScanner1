@@ -2,6 +2,9 @@ package tosatto.nextscanner.calc.threedim;
 
 import java.awt.Color;
 
+import org.la4j.vector.Vector;
+import org.la4j.vector.dense.BasicVector;
+
 import tosatto.geometry.GeometryIntersection;
 import tosatto.geometry.GeometryLine;
 import tosatto.geometry.GeometryOrtogonal;
@@ -9,6 +12,7 @@ import tosatto.geometry.GeometryPlane;
 import tosatto.geometry.GeometryPoint;
 import tosatto.geometry.GeometrySpace;
 import tosatto.geometry.GeometryTransformation;
+import tosatto.geometry.GeometryUtils;
 
 public class GeometryCalculator implements ICalculator {
 
@@ -25,6 +29,92 @@ public class GeometryCalculator implements ICalculator {
 	GeometryLine lRay;
 	
 	GeometrySpace gSpace = null;
+	
+	GeometryPoint[][] imgPts;
+	
+	private void initImgPts ()
+	{
+		GeometryPlane imgPlane;
+		
+		GeometryPoint centerRayIntersect = (GeometryPoint)GeometryIntersection.intersect(hPlane, lRot);
+		
+		double dist = (centerRayIntersect.getDistance(pCam))/3;
+		
+		double [] pdl = lRay.getDirectorParameters();
+		
+		pdl = GeometryUtils.normalizeVector(pdl);
+		
+		Vector v = new BasicVector (pdl);
+		
+		v = v.multiply(dist);
+		
+		GeometryPoint pt = GeometryTransformation.translate(pCam, v);
+		
+		imgPlane = GeometryOrtogonal.getOrtogonalPlane(lRay, pt);
+		
+		if (gSpace != null)
+		{
+			gSpace.addObject("imgPlane", imgPlane, Color.yellow, false);
+		}
+		
+		GeometryLine a = getRay(ac.getFOVV()/2, -ac.getFOVH()/2);
+		GeometryLine b = getRay(-ac.getFOVV()/2, -ac.getFOVH()/2);
+		GeometryLine c = getRay(ac.getFOVV()/2, ac.getFOVH()/2);	
+		
+		GeometryPoint topLeft = (GeometryPoint)GeometryIntersection.intersect(imgPlane, a);
+		GeometryPoint bottomLeft = (GeometryPoint)GeometryIntersection.intersect(imgPlane, b);
+		GeometryPoint topRight = (GeometryPoint)GeometryIntersection.intersect(imgPlane, c);
+		
+
+		
+		GeometryLine l1 = new GeometryLine(topLeft, topRight);
+		GeometryLine l2 = new GeometryLine(topLeft, bottomLeft);
+		
+		double[] pdl1 = GeometryUtils.normalizeVector(l1.getDirectorParameters());
+		double[] pdl2 = GeometryUtils.normalizeVector(l2.getDirectorParameters());
+		
+		double dist1 = topLeft.getDistance(topRight)/ac.getW();
+		double dist2 = topLeft.getDistance(bottomLeft)/ac.getH();
+		
+		Vector v1 = new BasicVector(pdl1);
+		Vector v2 = new BasicVector(pdl2);
+		
+		v1 = v1.multiply(-dist1);
+		v2 = v2.multiply(-dist2);
+		
+		GeometryPoint tr = GeometryTransformation.translate(topLeft, v1);
+		tr = GeometryTransformation.translate(tr, v2);
+		
+		imgPts = new GeometryPoint[(int)ac.getH()][(int)ac.getW()];
+		
+		for (int i = 0; i < ac.getH(); i++)
+		{
+			for (int j = 0; j < ac.getW(); j++)
+			{
+				Vector vH = v2.multiply(i);
+				Vector vW = v1.multiply(j);
+				
+				Vector vAct = vW.add(vH);
+				
+				imgPts[i][j] = GeometryTransformation.translate(topLeft, vAct);
+				
+				if (gSpace != null && i%3 == 0 && j%3 == 0)
+				{
+					
+					//gSpace.addObject("tr" + Integer.toString(i) + Integer.toString(j), imgPts[i][j], Color.green);
+				}
+			}
+		}
+		
+		if (gSpace != null)
+		{
+			//gSpace.addObject("imgPlane", imgPlane, Color.blue);
+			//gSpace.addObject("a", topLeft, Color.red);
+			//gSpace.addObject("b", bottomLeft, Color.red);
+			//gSpace.addObject("c", topRight, Color.red);
+			gSpace.drawScene();
+		}
+	}
 	
 	private void initGeometryObjects ()
 	{
@@ -48,6 +138,8 @@ public class GeometryCalculator implements ICalculator {
 			gSpace.addObject("lRay", lRay, Color.orange);
 			gSpace.addObject("lCamOrt", lCamOrt, Color.blue);
 		}
+		
+		initImgPts();
 	}
 	
 	public GeometryCalculator(double fovh, double fovv, double w, double h, GeometryPoint camPos, GeometrySpace gS) {
@@ -65,18 +157,28 @@ public class GeometryCalculator implements ICalculator {
 	}
 	
 	
-	
-	@Override
-	public Point3D calcPosition(int M, int N) {
-		
-		double vA = -ac.getVerticalAngle(M);
-		double hA = ac.getHorizontalAngle(N);
-		
+	private GeometryLine getRay (double vA, double hA)
+	{
 		GeometryPlane hPlaneRot = GeometryTransformation.rotate(hPlane, lCamOrt, vA);
 		GeometryPlane vPlaneRot = GeometryTransformation.rotate(vPlane, lCam, hA);
 		GeometryLine actRay = new GeometryLine(hPlaneRot, vPlaneRot);
 		
+		return actRay;
+	}
+	
+	private GeometryLine getRay (int M, int N)
+	{	
+		return new GeometryLine (pCam, imgPts[M][N]);
+	}
+	
+	@Override
+	public Point3D calcPosition(int M, int N) {
+		
+		GeometryLine actRay = getRay(M, N);
+		
 		gSpace.addObject("actRay", actRay, Color.green);
+		gSpace.addObject("actPt", imgPts[M][N], Color.green);
+		gSpace.drawScene();
 		
 		try {
 			Thread.sleep(100);

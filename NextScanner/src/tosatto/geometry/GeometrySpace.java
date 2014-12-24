@@ -143,21 +143,21 @@ public class GeometrySpace {
 	{
 		oList.put(n, new GeometryObjectListEntry(c, o));
 		
-		drawScene();
+		//drawScene();
 	}
 	
 	public void addObject (String n, GeometryObject o, Color c, boolean visible)
 	{
 		oList.put(n, new GeometryObjectListEntry(c, o, visible));
 		
-		drawScene();
+		//drawScene();
 	}
 	
 	public void removeObject (String n)
 	{
 		oList.remove(n);
 		
-		drawScene();
+		//drawScene();
 	}
 	
 	public void updateObject (String n, GeometryObject newO, Color newC)

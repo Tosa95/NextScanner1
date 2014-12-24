@@ -39,4 +39,24 @@ public class AngleCalculator {
 	{
 		return 2*Math.atan((Math.tan(fovv/2)*w)/(double)h);
 	}
+	
+	public double getW()
+	{
+		return w;
+	}
+	
+	public double getH()
+	{
+		return h;
+	}
+	
+	public double getFOVV()
+	{
+		return fovv;
+	}
+	
+	public double getFOVH()
+	{
+		return fovh;
+	}
 }

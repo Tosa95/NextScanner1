@@ -4,6 +4,8 @@ import java.awt.Point;
 
 import tosatto.geometry.GeometryPoint;
 import tosatto.nextscanner.main.MainWindow;
+import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.Notifier;
 import tosatto.nextscanner.main.settings.SettingsManager;
 import tosatto.nextscanner.ui.ogl.*;
 
@@ -32,6 +34,11 @@ public class ThreeDimManager {
 		//pc = new PositionCalculator(CAM_FOV, CAM_B, CAM_D, w, h);
 		
 		pc = new GeometryCalculator(CAM_FOV, 320, 240, new GeometryPoint(0.4, 0.2, 0.05), MainWindow.gSpace);
+		
+		for (int i = 0; i < 100; i++)
+		{
+			Notifier.get().raiseEvent(Double.toString(pc.calcPosition(20, i).getZ()), new EventCategory("debug:GeometryCalculator", 5), null);
+		}
 		
 		actPos = 0;
 		actAngle = 0;
@@ -127,7 +134,7 @@ public class ThreeDimManager {
 				
 				//Limita il punto, utilizzando l'altezza
 				//calcolata in precedenza
-				//act = limitPoint(act, maxH); /*TODO: Rimettere!*/
+				act = limitPoint(act, maxH);
 				
 				//Ruota il punto dell'angolazione corretta §2.3
 				Point3D rot = Point3DManipulationUtilities.rotateZ(act, actAngle);

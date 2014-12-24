@@ -32,7 +32,7 @@ public static final int SERIAL_BAUD = (int)SettingsManager.get().getValue("SERIA
 public static final int SERIAL_TOUT = (int)SettingsManager.get().getValue("SERIAL_TOUT");				//Serial Port Timeout
 public static final String[] SERIAL_PNAMES = {(String)SettingsManager.get().getValue("SERIAL_PNAME")};		//Serial Port Names
 
-public static final boolean FAKE_MODE = true;
+public static final boolean FAKE_MODE = (int)SettingsManager.get().getValue("ENABLE_FAKES")!=0?true:false;
 
 private IWebcam cam;
 private ILaser laser;

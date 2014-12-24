@@ -8,14 +8,19 @@
   <setting name="PIC_WAIT_TIME_ON" value="300" type="class java.lang.Integer" />
   <setting name="SERIAL_BAUD" value="9600" type="class java.lang.Integer" />
   <setting name="SERIAL_TOUT" value="2000" type="class java.lang.Integer" />
-  <setting name="SERIAL_PNAME" value="COM7" type="class java.lang.String" />
+  <setting name="SERIAL_PNAME" value="COM3" type="class java.lang.String" />
   <setting name="STEPS" value="400" type="class java.lang.Integer" />
-  <setting name="RESOLUTION" value="20.0" type="class java.lang.Double" />
+  <setting name="RESOLUTION" value="10.0" type="class java.lang.Double" />
   <setting name="VERT_RES" value="30.0" type="class java.lang.Double" />
   <setting name="CAM_FOV" value="0.9075712110370513" type="class java.lang.Double" />
   <setting name="CAM_B" value="0.4487989505128276" type="class java.lang.Double" />
   <setting name="CAM_D" value="0.5" type="class java.lang.Double" />
-  <setting name="Z_MIN" value="-8.948170675094694E-4" type="class java.lang.Double" />
-  <setting name="Z_MIN_PX" value="148" type="class java.lang.Double" />
+  <setting name="Z_MIN" value="-0.02544769694157737" type="class java.lang.Double" />
+  <setting name="Z_MIN_PX" value="193" type="class java.lang.Double" />
+  <setting name="CAM_X" value="0.4" type="class java.lang.Double" />
+  <setting name="CAM_Y" value="0.2" type="class java.lang.Double" />
+  <setting name="CAM_Z" value="0.07" type="class java.lang.Double" />
+  <setting name="GEOMETRY_SLOW" value="0" type="class java.lang.Integer" />
+  <setting name="ENABLE_FAKES" value="1" type="class java.lang.Integer" />
   <setting name="RENDER_EDGES" value="0" type="class java.lang.Integer" />
 </settings>

@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import tosatto.nextscanner.calc.imgcmp.ImageComparer;
 import tosatto.nextscanner.calc.threedim.PositionCalculator;
 import tosatto.nextscanner.calc.threedim.ThreeDimManager;
 import tosatto.nextscanner.hardwarecom.HardwareManager;
@@ -24,6 +25,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageFilter;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -313,7 +315,15 @@ public class SettingsFrame extends JFrame implements ActionListener, WindowListe
 			
 			ThreeDimManager TDM = new ThreeDimManager();
 			
-			double z = TDM.getZ(new Point((int)SettingsManager.get().getValue("WCAM_WIDTH")/2, (int)pImg.getPointLow().getY()));
+			HardwareManager.get().captureAct();
+			
+			BufferedImage img1 = HardwareManager.get().getLaserONPic();
+			BufferedImage img2 = HardwareManager.get().getLaserOFFPic();
+			BufferedImage res = new BufferedImage(img1.getWidth(), img1.getHeight(), BufferedImage.TYPE_INT_RGB);
+			
+			int[] values = ImageComparer.compare(img1, img2, res, 100);
+			
+			double z = TDM.getZ(new Point(values[(int)pImg.getPointLow().getY()], (int)pImg.getPointLow().getY()));
 			
 			SettingsManager.get().updateSetting("Z_MIN", z);
 			

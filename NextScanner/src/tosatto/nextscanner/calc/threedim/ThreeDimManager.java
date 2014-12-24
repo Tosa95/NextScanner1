@@ -14,6 +14,7 @@ public class ThreeDimManager {
 	private static final double CAM_FOV = (double)SettingsManager.get().getValue("CAM_FOV"); 
 	private static final double CAM_B = (double)SettingsManager.get().getValue("CAM_B"); 
 	private static final double CAM_D = (double)SettingsManager.get().getValue("CAM_D"); 
+	private static final GeometryPoint CAM_POS = new GeometryPoint((double)SettingsManager.get().getValue("CAM_X"), (double)SettingsManager.get().getValue("CAM_Y"), (double)SettingsManager.get().getValue("CAM_Z"));
 	
 	private int w, h, pN, actPos, vS;
 	
@@ -33,12 +34,7 @@ public class ThreeDimManager {
 		
 		//pc = new PositionCalculator(CAM_FOV, CAM_B, CAM_D, w, h);
 		
-		pc = new GeometryCalculator(CAM_FOV, 320, 240, new GeometryPoint(0.4, 0.2, 0.05), MainWindow.gSpace);
-		
-		for (int i = 0; i < 100; i++)
-		{
-			Notifier.get().raiseEvent(Double.toString(pc.calcPosition(20, i).getZ()), new EventCategory("debug:GeometryCalculator", 5), null);
-		}
+		pc = new GeometryCalculator(CAM_FOV, w, h, CAM_POS, MainWindow.gSpace);
 		
 		actPos = 0;
 		actAngle = 0;
@@ -58,6 +54,8 @@ public class ThreeDimManager {
 		step = Math.toRadians(360)/posNum;
 		
 		vI = new VerticalIndexer(h, res);
+		
+		this.res = res;
 		
 		vS = vI.getNum();
 	}
@@ -193,14 +191,16 @@ public class ThreeDimManager {
 	//Calcola l'altezza massima del profilo attuale §2.6.1
 	public double calcMaxHeight (int[] values)
 	{
+		VerticalIndexer vIndex = new VerticalIndexer(h, res);
+		
 		//Cicla sulla linea partendo dall'alto
-		for (int i = 0; i < values.length; i++)
+		for (int i = 0; i < vIndex.getNum(); vIndex.next(), i++)
 		{
 			//Ritorna la Z del primo pixel con scostamento dal
 			//centro maggiore di 0
 			if ((w - values[i])-w/2 > 0)
 			{
-				Point3D p = getPoint(values[i], i);
+				Point3D p = getPoint(values[i], vIndex.act());
 				
 				return p.getZ();
 			}

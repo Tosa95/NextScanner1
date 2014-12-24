@@ -13,6 +13,9 @@ import tosatto.geometry.GeometryPoint;
 import tosatto.geometry.GeometrySpace;
 import tosatto.geometry.GeometryTransformation;
 import tosatto.geometry.GeometryUtils;
+import tosatto.nextscanner.main.notifier.EventCategory;
+import tosatto.nextscanner.main.notifier.Notifier;
+import tosatto.nextscanner.main.settings.SettingsManager;
 
 public class GeometryCalculator implements ICalculator {
 
@@ -176,15 +179,20 @@ public class GeometryCalculator implements ICalculator {
 		
 		GeometryLine actRay = getRay(M, N);
 		
-		gSpace.addObject("actRay", actRay, Color.green);
-		gSpace.addObject("actPt", imgPts[M][N], Color.green);
-		gSpace.drawScene();
-		
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (((int)SettingsManager.get().getValue("GEOMETRY_SLOW"))!=0)
+		{
+			GeometryPoint act = imgPts[M][N];
+			
+			gSpace.addObject("actRay", actRay, Color.green);
+			gSpace.addObject("actPt", imgPts[M][N], Color.green);
+			gSpace.drawScene();
+			
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		GeometryPoint res = (GeometryPoint)GeometryIntersection.intersect(lPlane, actRay);

@@ -30,6 +30,15 @@ public class DefaultSettings {
 															new Setting("CAM_D", 0.5),
 															new Setting("Z_MIN", 0.0),
 															new Setting("Z_MIN_PX", 0.0),
+															new Setting("CAM_X", 0.4),
+															new Setting("CAM_Y", 0.2),
+															new Setting("CAM_Z", 0.07),
+															
+															//Geometry
+															new Setting("GEOMETRY_SLOW", 0),
+															
+															//Fakes
+															new Setting("ENABLE_FAKES", 1),
 															
 															//Renderer
 															new Setting("RENDER_EDGES", 0)
